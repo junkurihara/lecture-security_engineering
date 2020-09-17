@@ -24,7 +24,7 @@
     "babel-loader": "8.1.0",
     "cross-env": "7.0.2",
     "eslint": "7.9.0",
-    "webpack": "4.44.1",
+    "webpack": "4.44.2",
     "webpack-cli": "3.3.12",
     "webpack-merge": "5.1.4"
   },
