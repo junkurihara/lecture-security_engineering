@@ -1184,16 +1184,6 @@ asn1.js@^5.0.0, asn1.js@^5.2.0, asn1.js@~5.4.1:
     minimalistic-assert "^1.0.0"
     safer-buffer "^2.1.0"
 
-asn1.js@~5.3.0:
-  version "5.3.0"
-  resolved "https://registry.yarnpkg.com/asn1.js/-/asn1.js-5.3.0.tgz#439099fe9174e09cff5a54a9dda70260517e8689"
-  integrity sha512-WHnQJFcOrIWT1RLOkFFBQkFVvyt9BPOOrH+Dp152Zk4R993rSzXUGPmkybIcUFhHE2d/iHH+nCaOWVCDbO8fgA==
-  dependencies:
-    bn.js "^4.0.0"
-    inherits "^2.0.1"
-    minimalistic-assert "^1.0.0"
-    safer-buffer "^2.1.0"
-
 assert@^1.1.1:
   version "1.5.0"
   resolved "https://registry.yarnpkg.com/assert/-/assert-1.5.0.tgz#55c109aaf6e0aefdb3dc4b71240c70bf574b18eb"
@@ -1446,14 +1436,6 @@ buffer@^4.3.0:
     ieee754 "^1.1.4"
     isarray "^1.0.0"
 
-buffer@~5.4.0, buffer@~5.4.3:
-  version "5.4.3"
-  resolved "https://registry.yarnpkg.com/buffer/-/buffer-5.4.3.tgz#3fbc9c69eb713d323e3fc1a895eee0710c072115"
-  integrity sha512-zvj65TkFeIt3i6aj5bIvJDzjjQQGs4o/sNoezg1F1kYap9Nu2jcUdpwzRSJTHMMzG0H7bZkn4rNQpImhuxWX2A==
-  dependencies:
-    base64-js "^1.0.2"
-    ieee754 "^1.1.4"
-
 builtin-status-codes@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/builtin-status-codes/-/builtin-status-codes-3.0.0.tgz#85982878e21b98e1c66425e03d0174788f569ee8"
@@ -1527,7 +1509,7 @@ chalk@^4.0.0:
     ansi-styles "^4.1.0"
     supports-color "^7.1.0"
 
-charenc@0.0.2, charenc@~0.0.1:
+charenc@0.0.2:
   version "0.0.2"
   resolved "https://registry.yarnpkg.com/charenc/-/charenc-0.0.2.tgz#c0a1d2f3a7092e03774bfa83f14c0fc5790a8667"
   integrity sha1-wKHS86cJLgN3S/qD8UwPxXkKhmc=
@@ -1796,7 +1778,7 @@ cross-spawn@^7.0.1, cross-spawn@^7.0.2:
     shebang-command "^2.0.0"
     which "^2.0.1"
 
-crypt@0.0.2, crypt@~0.0.1:
+crypt@0.0.2:
   version "0.0.2"
   resolved "https://registry.yarnpkg.com/crypt/-/crypt-0.0.2.tgz#88d7ff7ec0dfb86f713dc87bbb42d044d3e6c41b"
   integrity sha1-iNf/fsDfuG9xPch7u0LQRNPmxBs=
@@ -2668,7 +2650,7 @@ is-binary-path@~2.1.0:
   dependencies:
     binary-extensions "^2.0.0"
 
-is-buffer@^1.1.5, is-buffer@~1.1.1, is-buffer@~1.1.6:
+is-buffer@^1.1.5, is-buffer@~1.1.6:
   version "1.1.6"
   resolved "https://registry.yarnpkg.com/is-buffer/-/is-buffer-1.1.6.tgz#efaa2ea9daa0d7ab2ea13a97b2b8ad51fefbe8be"
   integrity sha512-NcdALwpXkTm5Zvvbk7owOUSvVvBKDgKP5/ewfXEznmQFfs4ZRmanOeKBTjRVjka3QFoN6XJ+9F3USqfHqTaU5w==
@@ -2821,13 +2803,6 @@ isobject@^3.0.0, isobject@^3.0.1:
   resolved "https://registry.yarnpkg.com/isobject/-/isobject-3.0.1.tgz#4e431e92b11a9731636aa1f9c8d1ccbcfdab78df"
   integrity sha1-TkMekrEalzFjaqH5yNHMvP2reN8=
 
-js-crypto-aes@^0.7.3:
-  version "0.7.3"
-  resolved "https://registry.yarnpkg.com/js-crypto-aes/-/js-crypto-aes-0.7.3.tgz#898684383a8dcfdf4341e3126a980ee43f3d50a9"
-  integrity sha512-i8b4+j4J5fd6ss9UoBKKuX4Dgb5ZCztIL0wdmmiGnnCRL89FoBrOmECi1M0XfonWjshV4uexnBLyDztqjsDeJw==
-  dependencies:
-    js-crypto-env "^0.3.2"
-
 js-crypto-aes@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/js-crypto-aes/-/js-crypto-aes-1.0.0.tgz#dac491767ab763bf05e13837d748bed3a2a11a9e"
@@ -2835,7 +2810,7 @@ js-crypto-aes@^1.0.0:
   dependencies:
     js-crypto-env "^1.0.0"
 
-js-crypto-ec@1.0.0:
+js-crypto-ec@1.0.0, js-crypto-ec@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/js-crypto-ec/-/js-crypto-ec-1.0.0.tgz#11117ccbe50c98d46edf846d14edc6160d8de115"
   integrity sha512-c3m2PIvug0W7V7o9MsJulT+3S62V8HAdy4Qe9GfTqjViLV5+jD7iHgJK8oG/PmBk3u+lJ+uZFaFtdkKXmJ1LpQ==
@@ -2849,40 +2824,10 @@ js-crypto-ec@1.0.0:
     js-crypto-random "^1.0.0"
     js-encoding-utils "0.5.6"
 
-js-crypto-ec@^0.6.3:
-  version "0.6.3"
-  resolved "https://registry.yarnpkg.com/js-crypto-ec/-/js-crypto-ec-0.6.3.tgz#e6a241626f46b920f93b702124e3003892d734ab"
-  integrity sha512-El9nAI5GnR8XhmSNbxx4vtXhovow9U4XsqLLwLQRb/3VZ4UHev4+ppOnQCx16aAoHDwKUUBDVd6z3wHRqBemmA==
-  dependencies:
-    asn1.js "~5.3.0"
-    buffer "~5.4.0"
-    elliptic "~6.5.0"
-    js-crypto-env "^0.3.2"
-    js-crypto-hash "^0.6.3"
-    js-crypto-key-utils "^0.7.3"
-    js-crypto-random "^0.4.3"
-    js-encoding-utils "0.5.6"
-
-js-crypto-env@^0.3.2:
-  version "0.3.2"
-  resolved "https://registry.yarnpkg.com/js-crypto-env/-/js-crypto-env-0.3.2.tgz#02195723469da14449338ca2789fd7ff6784c533"
-  integrity sha512-F1uHiCkSOo36qBuuZABA4sBf+xeFBzhJZ0Sd7af8FAruszIhm1Xxv+Zr5Ne90Zlh7/fnxCsrdkj0N8f0a3lVlQ==
-
 js-crypto-env@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/js-crypto-env/-/js-crypto-env-1.0.0.tgz#259f39c48709d767903d292550deecd00242639b"
   integrity sha512-XDha60STinc0xJvDb+QwTHZz/MSJ3iJbR3pbacHxsmPvJr5Tk/yYqBFh3qFdNOqq3nqofmBfMhBYsQmoAcU9uA==
-
-js-crypto-hash@^0.6.3:
-  version "0.6.3"
-  resolved "https://registry.yarnpkg.com/js-crypto-hash/-/js-crypto-hash-0.6.3.tgz#748e3e1853f69dad714636db3290736825506641"
-  integrity sha512-SG8c9tM8y3sUb4k7WvpVfu5vU7zfPvX+eaYR5578TvehkehdaQbqAc+y+1FwxnqQ3WZ0gsYoOKp/mW+mqtNoWA==
-  dependencies:
-    buffer "~5.4.3"
-    hash.js "~1.1.7"
-    js-crypto-env "^0.3.2"
-    md5 "~2.2.1"
-    sha3 "~2.1.0"
 
 js-crypto-hash@^1.0.0:
   version "1.0.0"
@@ -2895,23 +2840,15 @@ js-crypto-hash@^1.0.0:
     md5 "~2.3.0"
     sha3 "~2.1.0"
 
-js-crypto-hkdf@^0.7.3:
-  version "0.7.3"
-  resolved "https://registry.yarnpkg.com/js-crypto-hkdf/-/js-crypto-hkdf-0.7.3.tgz#537c394a2e65bca80032daa07d2ffe7e4f78d32f"
-  integrity sha512-eAaVArAjS2GCacWGXY4hjBiexrLQYlI0PMOcbwtrSEj84XU3kUfMYZm9bpTyaTXgdHC/eQoXe/Of6biG+RSEaQ==
+js-crypto-hkdf@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/js-crypto-hkdf/-/js-crypto-hkdf-1.0.0.tgz#19c3abb4a12b78e4c0bf54bfedaa5260e53b0b22"
+  integrity sha512-QfoFY9NKaLSHC1SdBU7aLcfHAwslobqV1axcJJd4aQWM1G1CV2huyAiAj+VayUBGURW5mBE2RF5VUZ7FDjwc5Q==
   dependencies:
-    js-crypto-env "^0.3.2"
-    js-crypto-hmac "^0.6.3"
-    js-crypto-random "^0.4.3"
+    js-crypto-env "^1.0.0"
+    js-crypto-hmac "^1.0.0"
+    js-crypto-random "^1.0.0"
     js-encoding-utils "0.5.6"
-
-js-crypto-hmac@^0.6.3:
-  version "0.6.3"
-  resolved "https://registry.yarnpkg.com/js-crypto-hmac/-/js-crypto-hmac-0.6.3.tgz#c33352c1ee6076b17b8f4cb0e2167814b2b77d6d"
-  integrity sha512-T0pKOaHACOSG6Xs6/06G8RDDeZouQwIQNBq9L/zoUGsd4F67gAjpT3q2lGigAGpUd1hiyy7vnhvLpz7VDt6DbA==
-  dependencies:
-    js-crypto-env "^0.3.2"
-    js-crypto-hash "^0.6.3"
 
 js-crypto-hmac@^1.0.0:
   version "1.0.0"
@@ -2920,22 +2857,6 @@ js-crypto-hmac@^1.0.0:
   dependencies:
     js-crypto-env "^1.0.0"
     js-crypto-hash "^1.0.0"
-
-js-crypto-key-utils@^0.7.3:
-  version "0.7.3"
-  resolved "https://registry.yarnpkg.com/js-crypto-key-utils/-/js-crypto-key-utils-0.7.3.tgz#3d0aaa3a6f9edf8a2ed31496e63321071ccc3c4f"
-  integrity sha512-gblNTPAthD0yYW4Z/R//GP30bZ1Y9sV7rlu+GFag58+ndAPaqzn0/C1NnG8OqwoyHphrrU3ffnxvPlGVpAXZYA==
-  dependencies:
-    asn1.js "~5.3.0"
-    buffer "~5.4.0"
-    des.js "~1.0.0"
-    elliptic "~6.5.0"
-    js-crypto-aes "^0.7.3"
-    js-crypto-hash "^0.6.3"
-    js-crypto-pbkdf "^0.5.3"
-    js-crypto-random "^0.4.3"
-    js-encoding-utils "0.5.6"
-    lodash.clonedeep "~4.5.0"
 
 js-crypto-key-utils@^1.0.0:
   version "1.0.0"
@@ -2953,15 +2874,6 @@ js-crypto-key-utils@^1.0.0:
     js-encoding-utils "0.5.6"
     lodash.clonedeep "~4.5.0"
 
-js-crypto-pbkdf@^0.5.3:
-  version "0.5.3"
-  resolved "https://registry.yarnpkg.com/js-crypto-pbkdf/-/js-crypto-pbkdf-0.5.3.tgz#83a7c1180604594efc1762bfd4beb0e8af942126"
-  integrity sha512-2mBlbmC7lKHeb8drBiN+P2tOfu8IYdDGb3arilPnsurIcoLvMeCBHQIk8rs6xgOAExkPGFhF+gnoUg+/sIkLKg==
-  dependencies:
-    js-crypto-hash "^0.6.3"
-    js-crypto-hmac "^0.6.3"
-    js-encoding-utils "0.5.6"
-
 js-crypto-pbkdf@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/js-crypto-pbkdf/-/js-crypto-pbkdf-1.0.0.tgz#e779e935d30404fbd87173111fb2137ffeb8df63"
@@ -2971,13 +2883,6 @@ js-crypto-pbkdf@^1.0.0:
     js-crypto-hmac "^1.0.0"
     js-encoding-utils "0.5.6"
 
-js-crypto-random@^0.4.3:
-  version "0.4.3"
-  resolved "https://registry.yarnpkg.com/js-crypto-random/-/js-crypto-random-0.4.3.tgz#898c2d91991eead02b4e461005e878fa9827fd74"
-  integrity sha512-C3gzphPPfw9jfQ9Q/LjhJMZxQNp3AaoVRDvyZkiB+zYltfs8tKQPsskWkXACpg1Nzh01PtSRUvVijjptd2qGHQ==
-  dependencies:
-    js-crypto-env "^0.3.2"
-
 js-crypto-random@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/js-crypto-random/-/js-crypto-random-1.0.0.tgz#22cb08202d81543f0b00ec922d01d3af1ec983f5"
@@ -2985,34 +2890,34 @@ js-crypto-random@^1.0.0:
   dependencies:
     js-crypto-env "^1.0.0"
 
-js-crypto-rsa@^0.6.3:
-  version "0.6.3"
-  resolved "https://registry.yarnpkg.com/js-crypto-rsa/-/js-crypto-rsa-0.6.3.tgz#a45fd12c07496f3a036073ebe18010c32f0bae29"
-  integrity sha512-6zmkagjxuNC+HsUUcuWTDkZ4OXcGTgnlDlRp7OJ9RkiMID6muaLHRRZY5O/NDvCrRFTeWl5afRZFIWMues5YVQ==
+js-crypto-rsa@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/js-crypto-rsa/-/js-crypto-rsa-1.0.0.tgz#4c5dd237de25c52c0f29287010f84f41ccaca932"
+  integrity sha512-xV4jr9Ur68a84iSO1Ilsv8G1C+8ysl/Prf99JzS6etyoiPuzzHye40zwTEWJJ/17JpkDUJaTazTGX1M+qLz1gQ==
   dependencies:
     bn.js "~5.1.0"
-    js-crypto-env "^0.3.2"
-    js-crypto-hash "^0.6.3"
-    js-crypto-key-utils "^0.7.3"
-    js-crypto-random "^0.4.3"
+    js-crypto-env "^1.0.0"
+    js-crypto-hash "^1.0.0"
+    js-crypto-key-utils "^1.0.0"
+    js-crypto-random "^1.0.0"
     js-encoding-utils "0.5.6"
 
-js-crypto-utils@0.18.3:
-  version "0.18.3"
-  resolved "https://registry.yarnpkg.com/js-crypto-utils/-/js-crypto-utils-0.18.3.tgz#6332bef927a704300593e60fadaf4005e7d6c54e"
-  integrity sha512-yK4uIOLMugNIaE4BdTgYPL3B3D1ZdeakWBjQZ+RVLM41+8lfl8FROq33BUSixYsfMr36X+fzLnkqp8+CXbkkAQ==
+js-crypto-utils@1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/js-crypto-utils/-/js-crypto-utils-1.0.0.tgz#570e50cf4e356dd2b279af49486f2787a6c82fd4"
+  integrity sha512-/+/6WnWzlf6IcAwmI6jJxogadGaLqAtEpZOZHh6lrKCcP+5fG8GL1cGYsHilweeB/NWcrXCQS7itt9iPbVVMUQ==
   dependencies:
-    js-crypto-aes "^0.7.3"
-    js-crypto-ec "^0.6.3"
-    js-crypto-hash "^0.6.3"
-    js-crypto-hkdf "^0.7.3"
-    js-crypto-hmac "^0.6.3"
-    js-crypto-key-utils "^0.7.3"
-    js-crypto-pbkdf "^0.5.3"
-    js-crypto-random "^0.4.3"
-    js-crypto-rsa "^0.6.3"
+    js-crypto-aes "^1.0.0"
+    js-crypto-ec "^1.0.0"
+    js-crypto-hash "^1.0.0"
+    js-crypto-hkdf "^1.0.0"
+    js-crypto-hmac "^1.0.0"
+    js-crypto-key-utils "^1.0.0"
+    js-crypto-pbkdf "^1.0.0"
+    js-crypto-random "^1.0.0"
+    js-crypto-rsa "^1.0.0"
     js-encoding-utils "0.5.6"
-    js-x509-utils "^0.5.3"
+    js-x509-utils "^1.0.0"
     lodash.clonedeep "~4.5.0"
 
 js-encoding-utils@0.5.6:
@@ -3025,19 +2930,19 @@ js-encoding-utils@0.5.6:
   resolved "https://registry.yarnpkg.com/js-tokens/-/js-tokens-4.0.0.tgz#19203fb59991df98e3a287050d4647cdeaf32499"
   integrity sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ==
 
-js-x509-utils@^0.5.3:
-  version "0.5.3"
-  resolved "https://registry.yarnpkg.com/js-x509-utils/-/js-x509-utils-0.5.3.tgz#ce461d92b6344729e03853f0ecff7da11450a9a2"
-  integrity sha512-D/OByePS2mFd9WvzgfJZqhZ6kqjPuz8+p2QiMWgbE10DuKnGunQrW+p+7S3HntLP+AbV6PNE3K7O0sMxWflAeA==
+js-x509-utils@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/js-x509-utils/-/js-x509-utils-1.0.0.tgz#7c6d07503d00157b5f08df55edcc319dff32b8fd"
+  integrity sha512-T65FqlcWW1QRK9XSA2vgf9U853k4LE0ue0uXwRS/mwnxLKjSRK8OJ0xXyEnof2CLTMgCUanvx5uq6yXdfG1kuA==
   dependencies:
-    asn1.js "~5.3.0"
+    asn1.js "~5.4.1"
     asn1.js-rfc5280 "~3.0.0"
     bn.js "~5.1.0"
-    buffer "~5.4.0"
-    js-crypto-ec "^0.6.3"
-    js-crypto-key-utils "^0.7.3"
-    js-crypto-random "^0.4.3"
-    js-crypto-rsa "^0.6.3"
+    buffer "~5.6.0"
+    js-crypto-ec "^1.0.0"
+    js-crypto-key-utils "^1.0.0"
+    js-crypto-random "^1.0.0"
+    js-crypto-rsa "^1.0.0"
     js-encoding-utils "0.5.6"
 
 js-yaml@^3.13.1:
@@ -3205,15 +3110,6 @@ md5.js@^1.3.4:
     hash-base "^3.0.0"
     inherits "^2.0.1"
     safe-buffer "^5.1.2"
-
-md5@~2.2.1:
-  version "2.2.1"
-  resolved "https://registry.yarnpkg.com/md5/-/md5-2.2.1.tgz#53ab38d5fe3c8891ba465329ea23fac0540126f9"
-  integrity sha1-U6s41f48iJG6RlMp6iP6wFQBJvk=
-  dependencies:
-    charenc "~0.0.1"
-    crypt "~0.0.1"
-    is-buffer "~1.1.1"
 
 md5@~2.3.0:
   version "2.3.0"
