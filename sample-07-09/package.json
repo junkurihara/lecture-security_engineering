@@ -14,9 +14,9 @@
     "html:bundle": "cross-env TEST_ENV=bundle NODE_ENV=html yarn webpack",
     "html:window": "cross-env TEST_ENV=window NODE_ENV=html yarn webpack",
     "webpack": "webpack --mode development --config webpack.dev.js",
-    "webpack:prod": "cross-env NODE_ENV=production webpack --optimize-minimize --mode production --config webpack.prod.js",
+    "webpack:prod": "cross-env NODE_ENV=production webpack --mode production --config webpack.prod.js",
     "build": "rm -rf ./dist && cross-env NODE_ENV=production yarn tsc && yarn webpack:prod",
-    "analyze": "cross-env NODE_ENV=production webpack --mode production --optimize-minimize --json --config webpack.prod.js | webpack-bundle-size-analyzer",
+    "analyze": "cross-env NODE_ENV=production webpack --mode production --json --config webpack.prod.js | webpack-bundle-size-analyzer",
     "cleanup": "rm -rf ./dist coverage .nyc_output ./node_modules ./test/html/*.bundle.js ./test/html/test.html"
   },
   "author": "Jun Kurihara",

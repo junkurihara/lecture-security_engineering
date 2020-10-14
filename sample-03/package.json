@@ -7,7 +7,7 @@
   "scripts": {
     "start": "cp data/db.template.json data/db.json && ./node_modules/.bin/json-server --watch data/db.json",
     "execute": "node -r @babel/register src/post-get-node.js",
-    "build": "./node_modules/.bin/webpack --optimize-minimize --mode development --config webpack.dev.js",
+    "build": "./node_modules/.bin/webpack --mode development --config webpack.dev.js",
     "cleanup": "rm -rf ./dist coverage .nyc_output; rm -rf ./test/html/*.bundle.js; rm -rf ./test/html/test.html; rm -rf ./node_modules"
   },
   "author": "Jun Kurihara",
