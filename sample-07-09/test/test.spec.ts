@@ -1,12 +1,9 @@
 import jscu from 'js-crypto-utils';
 import jseu from 'js-encoding-utils';
-import * as chai from 'chai';
 import {getTestEnv} from './prepare';
 
-const expect = chai.expect;
 const env = getTestEnv();
 const library = env.library;
-const message = env.message;
 const envName = env.envName;
 
 // Import default credential parameters defined in credential-params.ts
@@ -17,12 +14,7 @@ describe(`${envName}: Demo for User Registration`, () => {
   let attestedCredentialPublicKeyRawId: ArrayBuffer;
   let attestedCredentialPublicKeyPEM: string;
 
-  before( () => {
-    console.log(message);
-  });
-
-  it('Validation and Key Extraction from WebAuthn Create Credential Procedure', async function () {
-    this.timeout(200000);
+  it('Validation and Key Extraction from WebAuthn Create Credential Procedure', async () => {
     console.log('======================== [USER REGISTRATION] ========================');
 
     // Receive a random challenge from Relaying Party (here we use a mock...)
@@ -35,8 +27,8 @@ describe(`${envName}: Demo for User Registration`, () => {
     const cred: Credential | null = await window.navigator.credentials.create(createOptions);
 
     // Check and output PublicKeyCredential
-    expect(cred !== null).to.equal(true);
-    expect((<PublicKeyCredential>cred).type).to.equal('public-key');
+    expect(cred !== null).toBeTruthy();
+    expect((<PublicKeyCredential>cred).type).toBe('public-key');
     const credential = <PublicKeyCredential>cred;
     console.log('------ [Response from Authenticator: PublicKeyCredential] ------');
     console.log(`> Credential ID: ${credential.id}`);
@@ -62,9 +54,9 @@ describe(`${envName}: Demo for User Registration`, () => {
     // Check the validity of PublicKeyCredential (attestation) as RP
     const createChallenge = (<any>createOptions.publicKey).challenge;
     const verifyAttestationResult = await library.verifyAttestation(credential, createChallenge);
-    expect(verifyAttestationResult.valid).to.equal(true);
-    expect(typeof verifyAttestationResult.credentialPublicKey === 'string').to.equal(true);
-    expect(typeof verifyAttestationResult.attestationCertificate === 'string').to.equal(true);
+    expect(verifyAttestationResult.valid).toBeTruthy();
+    expect(typeof verifyAttestationResult.credentialPublicKey === 'string').toBeTruthy();
+    expect(typeof verifyAttestationResult.attestationCertificate === 'string').toBeTruthy();
     console.log('');
     console.log('------ [Verification result on PublicKeyCredential.AuthenticatorAttestationResponse] ------');
     console.log(`> Verification result: ${verifyAttestationResult.valid}`);
@@ -75,11 +67,11 @@ describe(`${envName}: Demo for User Registration`, () => {
     attestedCredentialPublicKeyRawId = credential.rawId;
     attestedCredentialPublicKeyPEM = verifyAttestationResult.credentialPublicKey;
     console.log('');
-  });
+  }, 200000);
 
-  it('Validation at WebAuthn Get Credential Procedure', async function (){
+  it('Validation at WebAuthn Get Credential Procedure', async () => {
     console.log('======================== [USER AUTHENTICATION] ========================');
-    this.timeout(200000);
+
     ///////////////////////////////////////////////////////////////////
     // Receive a random challenge and public key ID from Relaying Party (here we use a mock...)
     // 本当はここはRPからもらった乱数を利用することに注意する。
@@ -90,8 +82,8 @@ describe(`${envName}: Demo for User Registration`, () => {
 
     // Retrieve an assertion on the given challenge
     const cred: Credential|null = await window.navigator.credentials.get(getOptions);
-    expect(cred !== null).to.equal(true);
-    expect((<PublicKeyCredential>cred).type).to.equal('public-key');
+    expect(cred !== null).toBeTruthy();
+    expect((<PublicKeyCredential>cred).type).toBe('public-key');
     const credential = <PublicKeyCredential>cred;
     console.log('------ [Response from Authenticator: PublicKeyCredential] ------');
     console.log(`> Credential ID: ${credential.id}`);
@@ -114,10 +106,11 @@ describe(`${envName}: Demo for User Registration`, () => {
     /////////////////////////////
     // Check the validity of PublicKeyCredential (assertion) as RP
     const verifyAssertionResult = await library.verifyAssertion(credential, randomChallenge, attestedCredentialPublicKeyPEM);
-    expect(verifyAssertionResult.valid).to.equal(true);
-    expect(typeof verifyAssertionResult.msg === 'string').to.equal(true);
+    expect(verifyAssertionResult.valid).toBeTruthy();
+    expect(typeof verifyAssertionResult.msg === 'string').toBeTruthy();
     console.log('');
     console.log('------ [Verification result on PublicKeyCredential.AuthenticatorAssertionResponse] ------');
     console.log(`> Verification result: ${verifyAssertionResult.valid}`);
-  });
+  }, 200000);
+
 });

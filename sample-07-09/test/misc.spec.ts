@@ -1,18 +1,12 @@
-import * as chai from 'chai';
-const expect = chai.expect;
 import {getTestEnv} from './prepare';
 const env = getTestEnv();
 // const library = env.library;
-const message = env.message;
 const envName = env.envName;
 import jseu from 'js-encoding-utils';
 import * as x509 from '@fidm/x509';
 import * as jscu from 'js-crypto-utils';
 
 describe(`${envName}: Misc tests for small utilities`, () => {
-  before( () => {
-    console.log(message);
-  });
   it ('x509', async () => {
     const pemCert = '-----BEGIN CERTIFICATE-----\n' +
       'MIICvDCCAaSgAwIBAgIEBMX+/DANBgkqhkiG9w0BAQsFADAuMSwwKgYDVQQDEyNZ\n' +
@@ -34,8 +28,8 @@ describe(`${envName}: Misc tests for small utilities`, () => {
     const crt = x509.Certificate.fromPEM(Buffer.from(jseu.encoder.stringToArrayBuffer(pemCert)));
     const key = new jscu.Key('der', new Uint8Array(crt.publicKey.toDER()));
     const jwk = await key.export('jwk');
-    expect((<JsonWebKey>jwk).kty).to.equal('EC');
-    expect((<JsonWebKey>jwk).crv).to.equal('P-256');
+    expect((<JsonWebKey>jwk).kty).toBe('EC');
+    expect((<JsonWebKey>jwk).crv).toBe('P-256');
   });
 
 });
