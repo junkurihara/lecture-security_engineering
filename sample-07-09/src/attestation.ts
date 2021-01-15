@@ -29,9 +29,9 @@ export const verifyAttestation = async (
   if (!checkCredentialId(credential)) return {valid: false};
 
   // AuthenticatorAttestationResponse
-  const response = (<AuthenticatorAttestationResponse>(credential).response);
+  const response = <AuthenticatorAttestationResponse>(credential.response);
   const decodedResponse = parseAuthenticatorResponse(response);
-  const authData = decodedResponse.attestationObject[0].authData;
+  const authData = decodedResponse.attestationObject.authData;
 
   // check clientDataJson and authData
   const r = await checkResponse(decodedResponse.clientDataJSON, authData, 'webauthn.create', challenge);
@@ -42,8 +42,8 @@ export const verifyAttestation = async (
   const clientDataHash = await jscu.hash.compute(new Uint8Array(response.clientDataJSON), 'SHA-256');
 
   // TODO: Adapted only to Security Key By Yubico
-  const fmt = decodedResponse.attestationObject[0].fmt;
-  const attStmt = decodedResponse.attestationObject[0].attStmt; // attestation statement
+  const fmt = decodedResponse.attestationObject.fmt;
+  const attStmt = decodedResponse.attestationObject.attStmt; // attestation statement
   if (fmt === 'packed') {
     // to be verified for 'packed'
     const verificationData = new Uint8Array(authData.length + clientDataHash.length);

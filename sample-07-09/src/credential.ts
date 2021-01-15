@@ -1,4 +1,4 @@
-import * as cbor from 'cbor';
+import * as cbor from 'cbor-sync';
 import jseu from 'js-encoding-utils';
 import {getJscu} from './env';
 
@@ -43,7 +43,7 @@ export const parseAuthenticatorResponse = (
   );
 
   if(typeName === 'AuthenticatorAttestationResponse'){
-    const attestationObject = cbor.decodeAllSync(
+    const attestationObject = cbor.decode(
       Buffer.from(
         (<AuthenticatorAttestationResponse>res).attestationObject
       ));
