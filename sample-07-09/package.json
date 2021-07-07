@@ -18,7 +18,7 @@
   "license": "MIT",
   "devDependencies": {
     "@types/jest": "26.0.24",
-    "@types/node": "14.17.4",
+    "@types/node": "14.17.5",
     "@types/webappsec-credential-management": "0.6.1",
     "@typescript-eslint/eslint-plugin": "4.28.2",
     "@typescript-eslint/parser": "4.28.2",
