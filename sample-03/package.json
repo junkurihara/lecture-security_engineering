@@ -13,18 +13,18 @@
   "author": "Jun Kurihara",
   "license": "MIT",
   "devDependencies": {
-    "@babel/cli": "7.14.8",
-    "@babel/core": "7.15.0",
+    "@babel/cli": "7.15.4",
+    "@babel/core": "7.15.5",
     "@babel/plugin-transform-regenerator": "7.14.5",
     "@babel/plugin-transform-runtime": "7.15.0",
     "@babel/polyfill": "7.12.1",
-    "@babel/preset-env": "7.15.0",
+    "@babel/preset-env": "7.15.4",
     "@babel/register": "7.15.3",
     "babel-eslint": "10.1.0",
     "babel-loader": "8.2.2",
     "cross-env": "7.0.3",
     "eslint": "7.32.0",
-    "webpack": "5.51.1",
+    "webpack": "5.52.0",
     "webpack-cli": "4.8.0"
   },
   "dependencies": {
@@ -33,6 +33,6 @@
     "js-crypto-utils": "1.0.2",
     "js-encoding-utils": "0.6.2",
     "json-server": "~0.16.0",
-    "node-fetch": "~2.6.0"
+    "node-fetch": "~3.0.0"
   }
 }
