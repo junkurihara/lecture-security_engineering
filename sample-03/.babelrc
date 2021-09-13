@@ -4,9 +4,7 @@
       "targets": {
         "browsers": [
           "last 2 chrome versions",
-          "last 2 firefox versions",
-          "IE 11",
-          "last 2 Edge versions"
+          "last 2 firefox versions"
         ]
       },
       "useBuiltIns": false

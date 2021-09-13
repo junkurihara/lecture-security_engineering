@@ -30,7 +30,8 @@ const config = {
     ],
   },
   externals: {
-    crypto: true
+    crypto: true,
+    'node-fetch': true
   }
 };
 

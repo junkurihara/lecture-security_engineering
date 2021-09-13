@@ -5,7 +5,7 @@ import jseu from 'js-encoding-utils';
 
 import * as webapi from '../encrypt-browser';
 import * as nodeapi from '../encrypt-node';
-import * as universalapi from '../encrypt-universal'
+import * as universalapi from '../encrypt-universal';
 
 /**
  * Post data
