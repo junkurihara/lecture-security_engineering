@@ -47,6 +47,15 @@ export const createCredentialDefaultArgs: CredentialCreationOptions = {
     // https://developer.mozilla.org/en-US/docs/Web/API/PublicKeyCredentialCreationOptions/excludeCredentials
     excludeCredentials: [],
 
+    // (Optional) an optional property of the PublicKeyCredentialCreationOptions dictionary.
+    // An object giving criteria to filter out the authenticators to be used for the creation operation.
+    // https://developer.mozilla.org/en-US/docs/Web/API/PublicKeyCredentialCreationOptions/authenticatorSelection
+    authenticatorSelection:{
+      authenticatorAttachment: 'cross-platform', // for USB key-like pluggable one
+      residentKey: 'preferred',
+      userVerification: 'required'
+    },
+
     // Extensions (Optional)
     // https://developer.mozilla.org/en-US/docs/Web/API/PublicKeyCredentialCreationOptions/extensions
     extensions: {}
@@ -65,7 +74,8 @@ export const getCredentialDefaultArgs: CredentialRequestOptions = {
     ]).buffer,
 
     // Info of credential public keys allowed to use authentication (Optional)
-    // 認証器次第ではここが空、RPが指定しなくても問題ない (RP IDに応じてユーザが鍵を選べる, Client-side discoverable Credentialと呼ぶ)
+    // 認証器次第ではここが空、RPが指定しなくても問題ない。つまりユーザIDに応じてCredential IDを探してきてそれをユーザへ通知しなくていい。
+    // (RP IDに応じてユーザが鍵を選べる, Client-side discoverable CredentialやresidentKeyと呼ぶ)
     allowCredentials: [{
       id: (new Uint8Array()).buffer,
       transports: ['usb', 'nfc', 'ble'],
