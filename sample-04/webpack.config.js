@@ -31,7 +31,7 @@ const config = {
   },
   externals: {
     crypto: true,
-    'node-fetch': true
+    'cross-fetch': true
   }
 };
 
