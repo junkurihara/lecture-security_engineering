@@ -21,7 +21,7 @@
     "@babel/preset-env": "7.16.11",
     "@babel/register": "7.17.7",
     "babel-eslint": "10.1.0",
-    "babel-loader": "8.2.4",
+    "babel-loader": "8.2.5",
     "cross-env": "7.0.3",
     "eslint": "8.13.0",
     "webpack": "5.72.0",
