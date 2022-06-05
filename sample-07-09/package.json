@@ -17,7 +17,7 @@
   "author": "Jun Kurihara",
   "license": "MIT",
   "devDependencies": {
-    "@types/jest": "28.1.0",
+    "@types/jest": "28.1.1",
     "@types/node": "16.11.38",
     "@types/webappsec-credential-management": "0.6.2",
     "@typescript-eslint/eslint-plugin": "5.27.0",
