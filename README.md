@@ -17,3 +17,7 @@ Slides, their TeX source codes, images are published under [CC BY-NC-SA 4.0](htt
 - Standardized cryptographic techniques
 - FIDO2 WebAuthn
 - Hybrid Public Key Encryption in IETF
+
+Past years' content are contained in 202x branches as archives.
+
+昨年度以前の資料は、202xブランチにアーカイブされています。
