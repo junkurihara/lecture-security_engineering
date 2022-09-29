@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>E2E Encryption Test</title>
+  <script src="../node_modules/@babel/polyfill/browser.js"></script>
+  <script src="../node_modules/js-crypto-utils/dist/jscu.bundle.js"></script>
+  <script src="../dist/e2eTest.bundle.js"></script>
+</head>
+<body>
+<script type="text/javascript">
+  const data = 'test secret';
+  const key = 'test key';
+
+  e2eTest.postMyData({data, key, remote: true, encrypt: true})
+    .then( async (resPost) => {
+      console.log(`Registered id: ${JSON.stringify(resPost)}`);
+      const simpleFetch = await e2eTest.getMyData({id: resPost.id, key, remote: true});
+      console.log(`Retrieved plaintext string data: ${simpleFetch.data}`);
+      const decryptFetch =  await e2eTest.getMyData({id: resPost.id, key, remote: true, decrypt: true});
+      console.log(`Decrypted string data: ${decryptFetch.data}`);
+    });
+</script>
+</body>
+</html>
