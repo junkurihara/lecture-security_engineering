@@ -32,7 +32,7 @@
     "commander": "8.3.0",
     "cross-fetch": "~3.1.4",
     "js-crypto-utils": "1.0.5",
-    "js-encoding-utils": "0.7.1",
+    "js-encoding-utils": "0.7.3",
     "json-server": "~0.17.0"
   }
 }
