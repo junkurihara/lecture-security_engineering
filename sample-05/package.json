@@ -31,7 +31,7 @@
     "commander": "~9.4.1",
     "js-crypto-ec": "1.0.5",
     "js-crypto-utils": "1.0.5",
-    "js-encoding-utils": "0.7.1",
+    "js-encoding-utils": "0.7.3",
     "msgpack-lite": "~0.1.26"
   }
 }

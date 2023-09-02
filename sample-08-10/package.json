@@ -41,6 +41,6 @@
     "@fidm/x509": "1.2.1",
     "cbor-sync": "1.0.4",
     "js-crypto-utils": "1.0.5",
-    "js-encoding-utils": "0.7.1"
+    "js-encoding-utils": "0.7.3"
   }
 }
