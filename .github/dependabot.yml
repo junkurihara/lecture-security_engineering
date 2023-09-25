@@ -1,0 +1,45 @@
+# Basic set up for three package managers
+
+version: 2
+updates:
+
+  # Maintain dependencies for npm
+  - package-ecosystem: "npm"
+    directory: "/sample-03"
+    schedule:
+      interval: "weekly"
+    groups:
+      prod-dependency:
+        dependency-type: 'production'
+      dev-dependency:
+        dependency-type: 'development'
+
+  - package-ecosystem: "npm"
+    directory: "/sample-04"
+    schedule:
+      interval: "weekly"
+    groups:
+      prod-dependency:
+        dependency-type: 'production'
+      dev-dependency:
+        dependency-type: 'development'
+
+  - package-ecosystem: "npm"
+    directory: "/sample-05"
+    schedule:
+      interval: "weekly"
+    groups:
+      prod-dependency:
+        dependency-type: 'production'
+      dev-dependency:
+        dependency-type: 'development'
+
+  - package-ecosystem: "npm"
+    directory: "/sample-06"
+    schedule:
+      interval: "weekly"
+    groups:
+      prod-dependency:
+        dependency-type: 'production'
+      dev-dependency:
+        dependency-type: 'development'
