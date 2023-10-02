@@ -1,0 +1,27 @@
+name: Unit Test
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - name: Run unit tests sample-03-rs
+        run: |
+          cd sample-03-rs
+          cargo test --verbose
+      - name: Run unit tests sample-04-rs
+        run: |
+          cd sample-04-rs
+          cargo test --verbose
