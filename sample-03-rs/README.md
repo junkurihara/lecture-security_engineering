@@ -13,10 +13,10 @@ Then you have an executable binary `./target/release/cli`.
 ## Usage
 
 ```shell:
-$ ./target/release/cli -h
+$ ./target/release/cli03 -h
 Rust version of sample-03
 
-Usage: cli <COMMAND>
+Usage: cli03 <COMMAND>
 
 Commands:
   get   Get ciphertext or plaintext object from the json server
@@ -32,7 +32,7 @@ Options:
 $ ./target/release/post -h
 Post ciphertext or plaintext object to the json server
 
-Usage: cli post [OPTIONS] <DATA>
+Usage: cli03 post [OPTIONS] <DATA>
 
 Arguments:
   <DATA>  Plaintext data string
@@ -48,7 +48,7 @@ Options:
 $ ./target/release/get -h
 Get ciphertext or plaintext object from the json server
 
-Usage: cli get [OPTIONS] <ID>
+Usage: cli03 get [OPTIONS] <ID>
 
 Arguments:
   <ID>  Id number of the target data on the server

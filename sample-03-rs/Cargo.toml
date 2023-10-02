@@ -1,5 +1,5 @@
 [package]
-name = "cli"
+name = "cli03"
 authors = ["Jun Kurihara"]
 description = "Rust version of sample-03"
 repository = "https://github.com/junkurihara/lecture-security_engineering"

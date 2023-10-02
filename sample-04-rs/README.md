@@ -8,15 +8,15 @@ Rust implementation of [`sample-04`](../sample-04/), which is fully compatible w
 $ cargo build --release
 ```
 
-Then you have an executable binary `./target/release/cli`.
+Then you have an executable binary `./target/release/cli04`.
 
 ## Usage
 
 ```shell:
-$ ./target/release/cli -h
+$ ./target/release/cli04 -h
 Rust version of sample-04
 
-Usage: cli <COMMAND>
+Usage: cli04 <COMMAND>
 
 Commands:
   get         Get ciphertext or plaintext object from the json server
@@ -30,10 +30,10 @@ Options:
 ```
 
 ```shell:
-$ ./target/release/cli post -h
+$ ./target/release/cli04 post -h
 Post ciphertext or plaintext object to the json server
 
-Usage: cli post [OPTIONS] <DATA>
+Usage: cli04 post [OPTIONS] <DATA>
 
 Arguments:
   <DATA>  Plaintext data string
@@ -46,10 +46,10 @@ Options:
 ```
 
 ```shell:
-$ ./target/release/cli get -h
+$ ./target/release/cli04 get -h
 Get ciphertext or plaintext object from the json server
 
-Usage: cli get [OPTIONS] <ID>
+Usage: cli04 get [OPTIONS] <ID>
 
 Arguments:
   <ID>  Id number of the target data on the server
@@ -62,10 +62,10 @@ Options:
 ```
 
 ```shell:
-$ ./target/release/cli gen-secret -h
+$ ./target/release/cli04 gen-secret -h
 Generate master secret
 
-Usage: cli gen-secret <LEN>
+Usage: cli04 gen-secret <LEN>
 
 Arguments:
   <LEN>  Length of secret
