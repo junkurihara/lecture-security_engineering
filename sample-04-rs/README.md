@@ -1,4 +1,4 @@
-# sample-03-rs
+# sample-04-rs
 
 Rust implementation of [`sample-04`](../sample-04/), which is fully compatible with the original version.
 
