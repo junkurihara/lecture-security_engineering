@@ -19,9 +19,10 @@ Rust version of sample-04
 Usage: cli <COMMAND>
 
 Commands:
-  get   Get ciphertext or plaintext object from the json server
-  post  Post ciphertext or plaintext object to the json server
-  help  Print this message or the help of the given subcommand(s)
+  get         Get ciphertext or plaintext object from the json server
+  post        Post ciphertext or plaintext object to the json server
+  gen-secret  Generate master secret
+  help        Print this message or the help of the given subcommand(s)
 
 Options:
   -h, --help     Print help
@@ -29,31 +30,46 @@ Options:
 ```
 
 ```shell:
-$ ./target/release/post -h
+$ ./target/release/cli post -h
 Post ciphertext or plaintext object to the json server
 
-Usage: cli post [OPTIONS] --password <PASSWORD> <DATA>
+Usage: cli post [OPTIONS] <DATA>
 
 Arguments:
   <DATA>  Plaintext data string
 
 Options:
   -p, --password <PASSWORD>  Password
+  -m, --master <MASTER>      Master secret in base64
   -r, --remote               Post to the preset remote server (e2e.secarchlab.net) otherwise localhost:3000
   -h, --help                 Print help
 ```
 
 ```shell:
-$ ./target/release/get -h
+$ ./target/release/cli get -h
 Get ciphertext or plaintext object from the json server
 
-Usage: cli get [OPTIONS] --password <PASSWORD> <ID>
+Usage: cli get [OPTIONS] <ID>
 
 Arguments:
   <ID>  Id number of the target data on the server
 
 Options:
   -p, --password <PASSWORD>  Password
+  -m, --master <MASTER>      Master secret in base64
   -r, --remote               Get from the preset remote server (e2e.secarchlab.net) otherwise localhost:3000
   -h, --help                 Print help
+```
+
+```shell:
+$ ./target/release/cli gen-secret -h
+Generate master secret
+
+Usage: cli gen-secret <LEN>
+
+Arguments:
+  <LEN>  Length of secret
+
+Options:
+  -h, --help  Print help
 ```

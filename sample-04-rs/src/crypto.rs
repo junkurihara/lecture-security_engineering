@@ -63,7 +63,7 @@ mod tests {
   #[test]
   fn aes_cbc_works() -> Result<()> {
     let data = b"secret".as_slice();
-    let key = BinaryKey::try_new("password", 32, None)?;
+    let key = BinaryKey::try_new_pbkdf2("password", 32, None, None)?;
     let encrypted = encrypt(data, &key, None)?;
     let decrypted = decrypt(&encrypted, &key)?;
 
@@ -74,10 +74,11 @@ mod tests {
   #[test]
   fn aes_cbc_test_vector() -> Result<()> {
     let data = b"hello my super secret world!!!";
-    let key = BinaryKey::try_new(
+    let key = BinaryKey::try_new_pbkdf2(
       "my secret key",
       32,
       Some("jbfL016yS9RUb8Sf+6m+Pm2L1Io7u1SpqHsr+R6RTu4="),
+      None,
     )?;
     let iv = general_purpose::STANDARD.decode("zuwTPW7nrWon6nEhyrzzxA==")?;
     let encrypted_data = general_purpose::STANDARD.decode("EoeSsv5BFr6s1jZh3iMM1Pxa+wA4UxQnM30J2027kJU=")?;

@@ -7,6 +7,7 @@ pub struct ClapArgs {
   pub subcommand: SubCommands,
 }
 
+#[allow(non_snake_case, non_camel_case_types)]
 #[derive(Debug, Subcommand)]
 pub enum SubCommands {
   /// Get ciphertext or plaintext object from the json server
@@ -16,7 +17,11 @@ pub enum SubCommands {
 
     /// Password
     #[arg(short, long)]
-    password: String,
+    password: Option<String>,
+
+    /// Master secret in base64
+    #[arg(short, long)]
+    master: Option<String>,
 
     /// Get from the preset remote server (e2e.secarchlab.net) otherwise localhost:3000
     #[arg(short, long, action = ArgAction::SetTrue)]
@@ -29,10 +34,19 @@ pub enum SubCommands {
 
     /// Password
     #[arg(short, long)]
-    password: String,
+    password: Option<String>,
+
+    /// Master secret in base64
+    #[arg(short, long)]
+    master: Option<String>,
 
     /// Post to the preset remote server (e2e.secarchlab.net) otherwise localhost:3000
     #[arg(short, long, action = ArgAction::SetTrue)]
     remote: bool,
+  },
+  /// Generate master secret
+  Gen_Secret {
+    /// Length of secret
+    len: usize,
   },
 }
