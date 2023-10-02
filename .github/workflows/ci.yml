@@ -17,11 +17,6 @@ jobs:
       - uses: actions/checkout@v4
         with:
           submodules: recursive
-      - name: Run unit tests sample-03-rs
+      - name: Run unit tests
         run: |
-          cd sample-03-rs
-          cargo test --verbose
-      - name: Run unit tests sample-04-rs
-        run: |
-          cd sample-04-rs
           cargo test --verbose
