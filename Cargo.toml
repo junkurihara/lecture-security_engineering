@@ -1,6 +1,6 @@
 [workspace]
 
-members = ["sample-03-rs", "sample-04-rs"]
+members = ["sample-03-rs", "sample-04-rs", "sample-05-rs"]
 resolver = "2"
 
 [profile.release]
