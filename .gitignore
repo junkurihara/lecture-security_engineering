@@ -4,6 +4,7 @@ private-*/
 private_*/
 obsolete/
 .idea/
+target/
 
 ## Core latex/pdflatex auxiliary files:
 *.aux

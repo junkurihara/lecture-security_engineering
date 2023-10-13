@@ -5,6 +5,7 @@
   "main": "dist/index.js",
   "private": true,
   "scripts": {
+    "preinstall": "npx only-allow pnpm",
     "execute": "node -r @babel/register src/commands-node.js",
     "build": "./node_modules/.bin/webpack --mode development --config webpack.config.js",
     "cleanup": "rm -rf ./dist coverage .nyc_output; rm -rf ./test/html/*.bundle.js; rm -rf ./test/html/test.html; rm -rf ./node_modules"
@@ -12,25 +13,24 @@
   "author": "Jun Kurihara",
   "license": "MIT",
   "devDependencies": {
-    "@babel/cli": "7.22.15",
-    "@babel/core": "7.22.20",
+    "@babel/cli": "7.23.0",
+    "@babel/core": "7.23.2",
     "@babel/plugin-transform-regenerator": "7.22.10",
-    "@babel/plugin-transform-runtime": "7.22.15",
-    "@babel/polyfill": "7.12.1",
-    "@babel/preset-env": "7.22.20",
+    "@babel/plugin-transform-runtime": "7.23.2",
+    "@babel/preset-env": "7.23.2",
     "@babel/register": "7.22.15",
     "@babel/eslint-parser": "7.22.15",
     "babel-loader": "9.1.3",
     "cross-env": "7.0.3",
-    "eslint": "8.49.0",
+    "eslint": "8.51.0",
     "webpack": "5.88.2",
     "webpack-cli": "5.1.4"
   },
   "dependencies": {
-    "@babel/runtime": "~7.22.0",
-    "commander": "~9.4.1",
-    "js-crypto-ec": "1.0.6",
-    "js-crypto-utils": "1.0.6",
+    "@babel/runtime": "~7.23.2",
+    "commander": "~11.1.0",
+    "js-crypto-ec": "1.0.7",
+    "js-crypto-utils": "1.0.7",
     "js-encoding-utils": "0.7.3"
   }
 }
