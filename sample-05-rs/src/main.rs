@@ -8,7 +8,7 @@ mod util;
 
 use crate::{
   crypto::{decrypt, encrypt, Encrypted},
-  ecc::EccKeyPair,
+  ecc::*,
   error::*,
   key::BinaryKey,
   rsa::*,
@@ -19,8 +19,7 @@ use config::{ClapArgs, SubCommands};
 use rmp_serde::{Deserializer, Serializer};
 use serde::{Deserialize, Serialize};
 
-#[tokio::main]
-pub async fn main() -> Result<()> {
+pub fn main() -> Result<()> {
   let _ = include_str!("../Cargo.toml");
   let args = ClapArgs::parse();
 
@@ -114,11 +113,16 @@ pub async fn main() -> Result<()> {
       let private_key = hex::decode(private_key)?;
       let data = data.as_bytes();
 
-      let pk = EccKeyPair::<p256::NistP256>::from_spki_public_der(&public_key)? as EccKeyPair<_>;
-      let sk = EccKeyPair::<p256::NistP256>::from_pkcs8_private_der(&private_key)? as EccKeyPair<_>;
+      let pk = import_spki_der(&public_key)?;
+      let sk = import_pkcs8_der(&private_key)?;
 
-      let shared_bits = sk.derive_bits(&pk)?;
-      println!("<Shared Bits>\n{}\n", shared_bits.to_hex_string());
+      let shared_bits = match (&pk, &sk) {
+        (EccKeyPairType::P256(pk), EccKeyPairType::P256(sk)) => pk.derive_bits(sk)?,
+        (EccKeyPairType::P384(pk), EccKeyPairType::P384(sk)) => pk.derive_bits(sk)?,
+        _ => bail!("Unsupported curve or inconsistent key type"),
+      };
+
+      println!("<Shared Bits ({})>\n{}\n", pk, shared_bits.to_hex_string());
 
       let key = BinaryKey::try_new(&shared_bits, 32, None)?;
       println!(
@@ -160,11 +164,16 @@ pub async fn main() -> Result<()> {
       let private_key = hex::decode(private_key)?;
       let data = hex::decode(data)?;
 
-      let pk = EccKeyPair::<p256::NistP256>::from_spki_public_der(&public_key)? as EccKeyPair<_>;
-      let sk = EccKeyPair::<p256::NistP256>::from_pkcs8_private_der(&private_key)? as EccKeyPair<_>;
+      let pk = import_spki_der(&public_key)?;
+      let sk = import_pkcs8_der(&private_key)?;
 
-      let shared_bits = sk.derive_bits(&pk)?;
-      println!("<Shared Bits>\n{}\n", shared_bits.to_hex_string());
+      let shared_bits = match (&pk, &sk) {
+        (EccKeyPairType::P256(pk), EccKeyPairType::P256(sk)) => pk.derive_bits(sk)?,
+        (EccKeyPairType::P384(pk), EccKeyPairType::P384(sk)) => pk.derive_bits(sk)?,
+        _ => bail!("Unsupported curve or inconsistent key type"),
+      };
+
+      println!("<Shared Bits ({})>\n{}\n", pk, shared_bits.to_hex_string());
 
       let decoded = EncryptedPack::deserialize(&mut Deserializer::new(data.as_slice()))?;
       let encrypted = Encrypted {

@@ -1,8 +1,14 @@
 use crate::error::*;
+use crypto_common::generic_array::ArrayLength;
+use ecdsa::{
+  hazmat::{DigestPrimitive, VerifyPrimitive},
+  signature::{Signer, Verifier},
+  PrimeCurve, Signature, SignatureSize, SigningKey, VerifyingKey,
+};
 use elliptic_curve::{
   ecdh,
   pkcs8::{der::Decode, AssociatedOid, DecodePrivateKey, DecodePublicKey, EncodePrivateKey, EncodePublicKey},
-  CurveArithmetic, PublicKey, SecretKey,
+  AffinePoint, CurveArithmetic, PublicKey, SecretKey,
 };
 use std::fmt::Display;
 
@@ -29,10 +35,14 @@ impl Display for EccKeyPairType {
 
 impl<C> EccKeyPair<C>
 where
-  C: CurveArithmetic + AssociatedOid,
+  C: CurveArithmetic + AssociatedOid + PrimeCurve + DigestPrimitive,
+  AffinePoint<C>: VerifyPrimitive<C>,
+  SignatureSize<C>: ArrayLength<u8>,
   <C as elliptic_curve::CurveArithmetic>::AffinePoint: elliptic_curve::sec1::FromEncodedPoint<C>,
   <C as elliptic_curve::Curve>::FieldBytesSize: elliptic_curve::sec1::ModulusSize,
   <C as elliptic_curve::CurveArithmetic>::AffinePoint: elliptic_curve::sec1::ToEncodedPoint<C>,
+  <C as elliptic_curve::CurveArithmetic>::Scalar: ecdsa::hazmat::SignPrimitive<C>,
+  <<C as elliptic_curve::Curve>::FieldBytesSize as std::ops::Add>::Output: ArrayLength<u8>,
 {
   pub fn new() -> Self {
     let mut rng = rand::thread_rng();
@@ -75,6 +85,7 @@ where
     })
   }
 
+  #[allow(dead_code)]
   pub fn derive_bits(&self, other: &EccKeyPair<C>) -> Result<Vec<u8>> {
     if self.private.is_none() && other.private.is_none() {
       bail!("No private key");
@@ -89,6 +100,21 @@ where
 
     let raw_bits = shared_secret.raw_secret_bytes().as_slice();
     Ok(raw_bits.to_vec())
+  }
+
+  pub fn sign(&self, data: &[u8]) -> Result<Vec<u8>> {
+    if self.private.is_none() {
+      bail!("No private key");
+    }
+    let signing_key = SigningKey::from(self.private.as_ref().unwrap());
+    let signature: Signature<C> = signing_key.sign(data);
+    Ok(signature.to_vec())
+  }
+
+  pub fn verify(&self, data: &[u8], signature: &[u8]) -> Result<()> {
+    let verifying_key = VerifyingKey::from(self.public);
+    let signature: Signature<C> = Signature::try_from(signature)?;
+    verifying_key.verify(data, &signature).map_err(|e| anyhow!(e))
   }
 }
 
@@ -132,6 +158,7 @@ pub fn import_spki_der(der: &[u8]) -> Result<EccKeyPairType> {
 
 #[cfg(test)]
 mod tests {
+
   use super::*;
   use crate::util::*;
 
@@ -219,5 +246,13 @@ mod tests {
       "c69bed8ba4a68db213ed4d92e59d113abf6ff6cb811313abe7b7bc39c75d1602",
       &bits1.to_hex_string()
     );
+  }
+
+  #[test]
+  fn test_ecdsa() {
+    let keypair = EccKeyPair::<p256::NistP256>::new();
+    let data = "hello".as_bytes();
+    let signature = keypair.sign(data).unwrap();
+    keypair.verify(data, &signature).unwrap();
   }
 }

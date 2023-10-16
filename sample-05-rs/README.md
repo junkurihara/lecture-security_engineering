@@ -13,7 +13,7 @@ Then you have an executable binary `./target/release/cli05`.
 ## Usage
 
 ```shell:
-$ ./target/release/cli04 -h
+$ ./target/release/cli05 -h
 Rust version of sample-05
 
 Usage: cli05 <COMMAND>
