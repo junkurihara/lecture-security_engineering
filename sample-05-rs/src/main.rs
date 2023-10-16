@@ -25,34 +25,6 @@ pub async fn main() -> Result<()> {
   let args = ClapArgs::parse();
 
   match &args.subcommand {
-    // SubCommands::Get {
-    //   id,
-    //   password,
-    //   master,
-    //   remote,
-    // } => {
-    //   get_data(
-    //     id,
-    //     password.as_ref().map(|x| x.as_str()),
-    //     master.as_ref().map(|x| x.as_str()),
-    //     remote,
-    //   )
-    //   .await?;
-    // }
-    // SubCommands::Post {
-    //   data,
-    //   password,
-    //   master,
-    //   remote,
-    // } => {
-    //   post_data(
-    //     data,
-    //     password.as_ref().map(|x| x.as_str()),
-    //     master.as_ref().map(|x| x.as_str()),
-    //     remote,
-    //   )
-    //   .await?;
-    // }
     SubCommands::Rsa_Keygen { bits } => {
       let rsa_keypair = RsaKeyPair::new(bits)?;
       println!("<Generated RSA Key Pair (DER Form)>");

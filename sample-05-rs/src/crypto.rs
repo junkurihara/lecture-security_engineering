@@ -7,7 +7,6 @@ use aes::cipher::{
   },
   BlockDecryptMut, BlockEncryptMut, KeyIvInit,
 };
-use base64::{engine::general_purpose, Engine as _};
 use rand::RngCore;
 type Aes256CbcEnc = cbc::Encryptor<aes::Aes256>;
 type Aes256CbcDec = cbc::Decryptor<aes::Aes256>;
@@ -15,17 +14,6 @@ type Aes256CbcDec = cbc::Decryptor<aes::Aes256>;
 pub struct Encrypted {
   pub data: Vec<u8>,
   pub iv: Vec<u8>,
-}
-
-impl Encrypted {
-  #[allow(dead_code)]
-  pub fn data_to_base64(&self) -> String {
-    general_purpose::STANDARD.encode(&self.data)
-  }
-  #[allow(dead_code)]
-  pub fn iv_to_base64(&self) -> String {
-    general_purpose::STANDARD.encode(&self.iv)
-  }
 }
 
 pub fn encrypt(data: &[u8], key: &BinaryKey, iv: Option<&[u8]>) -> Result<Encrypted> {
