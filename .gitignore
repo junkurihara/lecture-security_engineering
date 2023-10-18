@@ -7,6 +7,7 @@ private_*/
 obsolete/
 .idea/
 target/
+.vscode
 
 ## Core latex/pdflatex auxiliary files:
 *.aux

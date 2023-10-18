@@ -1,0 +1,32 @@
+[package]
+name = "webauthn_sample"
+authors = ["Jun Kurihara"]
+description = "Rust version of sample-07-09-rs"
+repository = "https://github.com/junkurihara/lecture-security_engineering"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+anyhow = "1.0.75"
+axum = "0.6.20"
+clap = { version = "4.4.6", features = ["std", "cargo", "wrap_help", "derive"] }
+rand = "0.8.5"
+rustc-hash = "1.1.0"
+serde = { version = "1.0.189", features = ["derive"] }
+tokio = { version = "1.33.0", features = ["full"] }
+tower = { version = "0.4.13", features = ["util"] }
+tower-http = { version = "0.4.4", features = ["trace", "fs"] }
+tower-sessions = "0.3.3"
+tracing = "0.1.39"
+tracing-subscriber = { version = "0.3.17", features = ["env-filter"] }
+url = "2.4.1"
+uuid = { version = "1.4.1", features = ["v4"] }
+webauthn-rs = { version = "0.4.8", features = [
+  "resident-key-support",
+  "danger-allow-state-serialisation",
+  "preview-features",
+] }
