@@ -7,7 +7,7 @@ use std::{
 };
 use url::Url;
 use uuid::Uuid;
-use webauthn_rs::{prelude::Passkey, Webauthn, WebauthnBuilder};
+use webauthn_rs::{prelude::PasswordlessKey, Webauthn, WebauthnBuilder};
 
 #[derive(Parser, Debug)]
 #[command(author, version, about, long_about = None)]
@@ -34,7 +34,7 @@ pub struct AppState {
 #[derive(Debug)]
 pub struct UserData {
   pub username_id_map: HashMap<String, Uuid>,
-  pub id_passkey_map: HashMap<Uuid, Vec<Passkey>>,
+  pub id_passkey_map: HashMap<Uuid, Vec<PasswordlessKey>>,
 }
 
 pub async fn parse_opts() -> Result<AppState> {

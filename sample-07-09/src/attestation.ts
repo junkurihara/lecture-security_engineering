@@ -26,7 +26,10 @@ export const verifyAttestation = async (
   const jscu = getJscu();
   // https://www.w3.org/TR/webauthn/#registering-a-new-credential
   //check Id
-  if (!checkCredentialId(credential)) return {valid: false};
+  if (!checkCredentialId(credential)) {
+    console.log('Credential ID is not valid');
+    return {valid: false};
+  }
 
   // AuthenticatorAttestationResponse
   const response = <AuthenticatorAttestationResponse>(credential.response);
@@ -60,10 +63,16 @@ export const verifyAttestation = async (
 
     // @ts-ignore
     const validateSig = await jscu.pkc.verify(new Uint8Array(verificationData), signature, jscuKeyObj, 'SHA-256', {format: 'der'});
-    if (!validateSig) return {valid: false};
+    if (!validateSig) {
+      console.log('Signature is not valid');
+      return {valid: false};
+    }
 
     // Get Public Key From AuthData
     const parsed = await parseAttestedCredentialData(new Uint8Array(authData));
     return {valid: true, credentialPublicKey: parsed.publicKeyPem, attestationCertificate: pemCert};
-  } else return {valid: false};
+  } else {
+    console.log(`This format is not supported: ${fmt}`);
+    return {valid: false};
+  }
 };

@@ -1,4 +1,8 @@
-use crate::{constants::COOKIE_REGISTRATION_STATE, log::*, startup::AppState};
+use crate::{
+  constants::{COOKIE_AUTHENTICATION_STATE, COOKIE_REGISTRATION_STATE},
+  log::*,
+  startup::AppState,
+};
 use axum::{
   extract::Path,
   http::StatusCode,
@@ -6,15 +10,19 @@ use axum::{
   Extension, Json,
 };
 use serde::{Deserialize, Serialize};
-use std::{ops::DerefMut, sync::Arc};
+use std::sync::Arc;
 use tower_sessions::Session;
 use uuid::Uuid;
-use webauthn_rs::prelude::{CredentialID, PasskeyRegistration, RegisterPublicKeyCredential};
+use webauthn_rs::prelude::{
+  AttestationCaList, CredentialID, PasswordlessKeyAuthentication, PasswordlessKeyRegistration, PublicKeyCredential,
+  RegisterPublicKeyCredential,
+};
 
 #[derive(Debug)]
 pub enum WebAuthnError {
   UnknownError,
   UnknownUserLoginAttempt,
+  NoCredential,
   CorruptSession,
 }
 impl IntoResponse for WebAuthnError {
@@ -22,6 +30,7 @@ impl IntoResponse for WebAuthnError {
     let body = match self {
       WebAuthnError::UnknownError => "Unknown error",
       WebAuthnError::UnknownUserLoginAttempt => "Unknown user login attempt",
+      WebAuthnError::NoCredential => "No credential",
       WebAuthnError::CorruptSession => "Corrupt session",
     };
     (StatusCode::INTERNAL_SERVER_ERROR, body).into_response()
@@ -32,7 +41,14 @@ impl IntoResponse for WebAuthnError {
 struct RegistrationState {
   username: String,
   uuid: Uuid,
-  passkey_registration: PasskeyRegistration,
+  passkey_registration: PasswordlessKeyRegistration,
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+struct AuthenticationState {
+  username: String,
+  uuid: Uuid,
+  passkey_authentication: PasswordlessKeyAuthentication,
 }
 
 pub async fn start_register(
@@ -76,9 +92,15 @@ pub async fn start_register(
   });
   drop(users);
 
-  let res = shared_state
-    .webauthn
-    .start_passkey_registration(uuid, &username, &username, existing_cred_ids);
+  let res = shared_state.webauthn.start_passwordlesskey_registration(
+    uuid,
+    &username,
+    &username,
+    existing_cred_ids,
+    AttestationCaList::strict(),
+    None,
+  );
+  // .start_passkey_registration(uuid, &username, &username, existing_cred_ids);
 
   match res {
     Ok((ccr, passkey_registration)) => {
@@ -137,7 +159,7 @@ pub async fn finish_register(
 
   let res = app_state
     .webauthn
-    .finish_passkey_registration(&reg, &reg_state.passkey_registration);
+    .finish_passwordlesskey_registration(&reg, &reg_state.passkey_registration);
 
   let status_code = match res {
     Ok(new_passkey) => {
@@ -152,6 +174,127 @@ pub async fn finish_register(
     }
     Err(e) => {
       error!("Failed to register new credential for {}: {}", reg_state.username, e);
+      StatusCode::BAD_REQUEST
+    }
+  };
+  Ok(status_code)
+}
+
+pub async fn start_auth(
+  Extension(shared_state): Extension<Arc<AppState>>,
+  session: Session,
+  Path(username): Path<String>,
+) -> Result<impl IntoResponse, WebAuthnError> {
+  info!("Start authentication for {}", username);
+
+  let _ = session
+    .remove::<AuthenticationState>(COOKIE_AUTHENTICATION_STATE)
+    .map_err(|e| {
+      error!(
+        "Failed to remove authentication state from session during new authentication initiation: {}",
+        e
+      );
+      WebAuthnError::UnknownError
+    })?;
+
+  let users = shared_state.users.lock().map_err(|e| {
+    error!("Failed to lock users: {}", e);
+    WebAuthnError::UnknownError
+  })?;
+
+  let uuid = *users
+    .username_id_map
+    .get(&username)
+    .ok_or(WebAuthnError::UnknownUserLoginAttempt)?;
+  let creds = users.id_passkey_map.get(&uuid).ok_or(WebAuthnError::NoCredential)?;
+
+  let res = shared_state
+    .webauthn
+    .start_passwordlesskey_authentication(creds.as_slice());
+
+  drop(users);
+
+  match res {
+    Ok((rcr, passkey_authentication)) => {
+      info!("Authentication initiated for {}", username);
+      if let Err(e) = session.insert(
+        COOKIE_AUTHENTICATION_STATE,
+        AuthenticationState {
+          username,
+          uuid,
+          passkey_authentication,
+        },
+      ) {
+        error!(
+          "Failed to insert authentication state into session during new authentication initiation: {}",
+          e
+        );
+        return Err(WebAuthnError::UnknownError);
+      };
+      Ok(Json(rcr))
+    }
+    Err(e) => {
+      error!("Failed to initiate authentication for {}: {}", username, e);
+      Err(WebAuthnError::UnknownError)
+    }
+  }
+}
+
+pub async fn finish_auth(
+  Extension(shared_state): Extension<Arc<AppState>>,
+  session: Session,
+  Json(auth): Json<PublicKeyCredential>,
+) -> Result<impl IntoResponse, WebAuthnError> {
+  let auth_state = session
+    .get::<AuthenticationState>(COOKIE_AUTHENTICATION_STATE)
+    .map_err(|e| {
+      error!(
+        "Failed to get authentication state from session during authentication finish: {}",
+        e
+      );
+      WebAuthnError::UnknownError
+    })?
+    .ok_or(WebAuthnError::CorruptSession)?;
+
+  let _ = session
+    .remove::<AuthenticationState>(COOKIE_AUTHENTICATION_STATE)
+    .map_err(|e| {
+      error!(
+        "Failed to remove authentication state from session during authentication finish: {}",
+        e
+      );
+      WebAuthnError::UnknownError
+    })?;
+
+  let res = shared_state
+    .webauthn
+    .finish_passwordlesskey_authentication(&auth, &auth_state.passkey_authentication);
+
+  let status_code = match res {
+    Ok(auth_res) => {
+      let mut users = shared_state.users.lock().map_err(|e| {
+        error!("Failed to lock users: {}", e);
+        WebAuthnError::UnknownError
+      })?;
+
+      // Update the credential counter, if possible.
+      users
+        .id_passkey_map
+        .get_mut(&auth_state.uuid)
+        .map(|keys| {
+          keys.iter_mut().for_each(|sk| {
+            // This will update the credential if it's the matching
+            // one. Otherwise it's ignored. That is why it is safe to
+            // iterate this over the full list.
+            sk.update_credential(&auth_res);
+          })
+        })
+        .ok_or(WebAuthnError::NoCredential)?;
+      info!("Successfully authenticated for {}", auth_state.username);
+      StatusCode::OK
+    }
+    Err(e) => {
+      error!("Failed to authenticate for {}: {}", auth_state.username, e);
       StatusCode::BAD_REQUEST
     }
   };
