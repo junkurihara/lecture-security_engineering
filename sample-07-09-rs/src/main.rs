@@ -38,8 +38,10 @@ fn main() -> Result<()> {
 
 async fn define_route(shared_state: Arc<AppState>) {
   let addr = shared_state.listen_socket;
+  let asset_dir = shared_state.asset_dir.clone();
 
   info!("Listening on {}", &addr);
+  info!("Serving static files from {}", &asset_dir);
 
   // session
   let session_store = MemoryStore::default();
@@ -55,8 +57,9 @@ async fn define_route(shared_state: Arc<AppState>) {
   // routes
   let api = Router::new()
     .route("/register_start/:username", post(start_register))
+    .route("/register_finish", post(finish_register))
     .layer(Extension(shared_state));
-  let static_files = Router::new().nest_service("/", ServeDir::new("./assets").append_index_html_on_directories(true));
+  let static_files = Router::new().nest_service("/", ServeDir::new(asset_dir).append_index_html_on_directories(true));
 
   // build router with session
   let router = Router::new().merge(api).merge(static_files).layer(session_service);

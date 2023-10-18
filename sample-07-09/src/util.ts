@@ -1,8 +1,10 @@
 import jseu from 'js-encoding-utils';
-import * as cbor from 'cbor-sync';
+import { decode } from 'cbor-x/decode';
+import { Buffer } from 'buffer';
+window.Buffer = window.Buffer || Buffer;
 
 export const coseToJwk = (cose: Uint8Array) => {
-  const attestedCredentials = cbor.decode(Buffer.from(cose));
+  const attestedCredentials = decode(Buffer.from(cose));
   // https://tools.ietf.org/html/rfc8152#section-7
   const jwk: JsonWebKey = {};
   Object.keys(attestedCredentials).forEach( (key: any) => {

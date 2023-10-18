@@ -6,45 +6,33 @@ use axum::{
   Extension, Json,
 };
 use serde::{Deserialize, Serialize};
-use std::sync::Arc;
+use std::{ops::DerefMut, sync::Arc};
 use tower_sessions::Session;
 use uuid::Uuid;
-use webauthn_rs::prelude::{CredentialID, PasskeyRegistration};
+use webauthn_rs::prelude::{CredentialID, PasskeyRegistration, RegisterPublicKeyCredential};
 
 #[derive(Debug)]
 pub enum WebAuthnError {
   UnknownError,
   UnknownUserLoginAttempt,
+  CorruptSession,
 }
 impl IntoResponse for WebAuthnError {
   fn into_response(self) -> Response {
     let body = match self {
       WebAuthnError::UnknownError => "Unknown error",
       WebAuthnError::UnknownUserLoginAttempt => "Unknown user login attempt",
+      WebAuthnError::CorruptSession => "Corrupt session",
     };
     (StatusCode::INTERNAL_SERVER_ERROR, body).into_response()
   }
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Debug)]
 struct RegistrationState {
   username: String,
   uuid: Uuid,
   passkey_registration: PasskeyRegistration,
-}
-
-fn get_or_create_uuid(shared_state: Arc<AppState>, username: &str) -> Result<Uuid, WebAuthnError> {
-  let mut users = shared_state.users.lock().map_err(|e| {
-    error!("Failed to lock users: {}", e);
-    WebAuthnError::UnknownError
-  })?;
-
-  let uuid = users.username_id_map.entry(username.to_owned()).or_insert_with(|| {
-    let u = Uuid::new_v4();
-    info!("New user registration: {} - {}", username, &u);
-    u
-  });
-  Ok(*uuid)
 }
 
 pub async fn start_register(
@@ -54,7 +42,17 @@ pub async fn start_register(
 ) -> Result<impl IntoResponse, WebAuthnError> {
   info!("Start register a credential for {}", username);
 
-  let uuid = get_or_create_uuid(shared_state.clone(), &username)?;
+  let mut users = shared_state.users.lock().map_err(|e| {
+    error!("Failed to lock users: {}", e);
+    WebAuthnError::UnknownError
+  })?;
+
+  let uuid = *users.username_id_map.entry(username.to_owned()).or_insert_with(|| {
+    let u = Uuid::new_v4();
+    info!("New user registration: {} - {}", username, &u);
+    u
+  });
+  drop(users);
 
   let _ = session
     .remove::<RegistrationState>(COOKIE_REGISTRATION_STATE)
@@ -77,7 +75,6 @@ pub async fn start_register(
       .collect::<Vec<CredentialID>>()
   });
   drop(users);
-  println!("existing_cred_ids: {:?}", existing_cred_ids);
 
   let res = shared_state
     .webauthn
@@ -110,4 +107,53 @@ pub async fn start_register(
       Err(WebAuthnError::UnknownError)
     }
   }
+}
+
+pub async fn finish_register(
+  Extension(app_state): Extension<Arc<AppState>>,
+  session: Session,
+  Json(reg): Json<RegisterPublicKeyCredential>,
+) -> Result<impl IntoResponse, WebAuthnError> {
+  let reg_state = session
+    .get::<RegistrationState>(COOKIE_REGISTRATION_STATE)
+    .map_err(|e| {
+      error!(
+        "Failed to get registration state from session during registration finish: {}",
+        e
+      );
+      WebAuthnError::UnknownError
+    })?
+    .ok_or(WebAuthnError::CorruptSession)?;
+
+  let _ = session
+    .remove::<RegistrationState>(COOKIE_REGISTRATION_STATE)
+    .map_err(|e| {
+      error!(
+        "Failed to remove registration state from session during registration finish: {}",
+        e
+      );
+      WebAuthnError::UnknownError
+    })?;
+
+  let res = app_state
+    .webauthn
+    .finish_passkey_registration(&reg, &reg_state.passkey_registration);
+
+  let status_code = match res {
+    Ok(new_passkey) => {
+      let mut users = app_state.users.lock().map_err(|e| {
+        error!("Failed to lock users: {}", e);
+        WebAuthnError::UnknownError
+      })?;
+      let passkeys = users.id_passkey_map.entry(reg_state.uuid).or_insert(vec![]);
+      passkeys.push(new_passkey.clone());
+      info!("Successfully registered new credential for {}", reg_state.username);
+      StatusCode::OK
+    }
+    Err(e) => {
+      error!("Failed to register new credential for {}: {}", reg_state.username, e);
+      StatusCode::BAD_REQUEST
+    }
+  };
+  Ok(status_code)
 }

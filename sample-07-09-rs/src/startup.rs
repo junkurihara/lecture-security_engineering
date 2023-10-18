@@ -13,13 +13,18 @@ use webauthn_rs::{prelude::Passkey, Webauthn, WebauthnBuilder};
 #[command(author, version, about, long_about = None)]
 pub struct ClapArgs {
   /// Listen socket
-  #[clap(short, long, default_value = "127.0.0.1:8080")]
+  #[clap(short, long, default_value = DEFAULT_LISTEN_ADDR)]
   listen_addr: String,
+
+  /// Asset directory
+  #[clap(short, long, default_value = DEFAULT_ASSET_DIR)]
+  asset_dir: String,
 }
 
 #[derive(Debug)]
 pub struct AppState {
   pub listen_socket: SocketAddr,
+  pub asset_dir: String,
 
   pub webauthn: Arc<Webauthn>,
 
@@ -37,6 +42,7 @@ pub async fn parse_opts() -> Result<AppState> {
   let args = ClapArgs::parse();
 
   let listen_socket = args.listen_addr.parse::<SocketAddr>()?;
+  let asset_dir = args.asset_dir;
 
   // webauthn
   // TODO: These should be overridden by command line arguments
@@ -54,6 +60,7 @@ pub async fn parse_opts() -> Result<AppState> {
 
   let app_state = AppState {
     listen_socket,
+    asset_dir,
     webauthn,
     users,
   };

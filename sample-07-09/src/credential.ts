@@ -1,6 +1,8 @@
-import * as cbor from 'cbor-sync';
+import { decode } from 'cbor-x/decode';
 import jseu from 'js-encoding-utils';
 import {getJscu} from './env';
+import { Buffer } from 'buffer';
+window.Buffer = window.Buffer || Buffer;
 
 export const checkCredentialId = (
   credential: PublicKeyCredential
@@ -43,7 +45,7 @@ export const parseAuthenticatorResponse = (
   );
 
   if(typeName === 'AuthenticatorAttestationResponse'){
-    const attestationObject = cbor.decode(
+    const attestationObject = decode(
       Buffer.from(
         (<AuthenticatorAttestationResponse>res).attestationObject
       ));
@@ -58,5 +60,3 @@ export const parseAuthenticatorResponse = (
 };
 
 export const getPublicKeyIdFromAssertion = (assertion: PublicKeyCredential): Uint8Array => new Uint8Array(assertion.rawId);
-
-
