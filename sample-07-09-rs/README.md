@@ -2,7 +2,7 @@
 
 ## How to run
 
-You need Rust/Cargo environment in addition to Node.js v20+ at first. You can serve a sample WebAuthn registration/authentication server listening on `127.0.0.1:8080` as follows.
+You need Rust/Cargo environment in addition to Node.js v20+ at first. You can serve a sample WebAuthn registration/authentication server listening on `127.0.0.1:8080` as follows. Note that `start.sh` builds our TypeScript library located in `../sample-07-09/` to call from the frontend along with the rust server.
 
 ```shell:
 % cd sample-07-09-rs
