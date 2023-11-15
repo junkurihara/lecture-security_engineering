@@ -8,6 +8,8 @@ obsolete/
 .idea/
 target/
 .vscode
+.env
+log/
 
 ## Core latex/pdflatex auxiliary files:
 *.aux

@@ -4,7 +4,7 @@ mod log;
 mod startup;
 mod webauthn;
 
-use crate::{constants::COOKIE_NAME, error::*, log::*, startup::*, webauthn::*};
+use crate::{error::*, log::*, startup::*, webauthn::*};
 use axum::{
   error_handling::HandleErrorLayer, extract::Extension, http::StatusCode, routing::post, BoxError, Router, Server,
 };
@@ -39,9 +39,8 @@ fn main() -> Result<()> {
 async fn define_route(shared_state: Arc<AppState>) {
   let addr = shared_state.listen_socket;
   let asset_dir = shared_state.asset_dir.clone();
-
-  info!("Listening on {}", &addr);
-  info!("Serving static files from {}", &asset_dir);
+  let cookie_name = shared_state.cookie_name.clone();
+  let cookie_secure_flag = shared_state.cookie_secure_flag;
 
   // session
   let session_store = MemoryStore::default();
@@ -49,8 +48,8 @@ async fn define_route(shared_state: Arc<AppState>) {
     .layer(HandleErrorLayer::new(|_: BoxError| async { StatusCode::BAD_REQUEST }))
     .layer(
       SessionManagerLayer::new(session_store)
-        .with_secure(false) // TODO: This should be true in production
-        .with_name(COOKIE_NAME)
+        .with_secure(cookie_secure_flag) // This should be true in production (https environment)
+        .with_name(&cookie_name)
         .with_same_site(SameSite::Lax),
     );
 
