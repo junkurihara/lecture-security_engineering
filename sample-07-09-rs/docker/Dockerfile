@@ -8,6 +8,7 @@ FROM base as builder
 
 ENV CFLAGS=-Ofast
 ENV BUILD_DEPS curl make ca-certificates build-essential pkg-config libssl-dev
+ENV NODE_MAJOR 20
 
 WORKDIR /tmp
 
@@ -18,11 +19,15 @@ ENV RUSTFLAGS "-C link-arg=-s"
 RUN update-ca-certificates 2> /dev/null || true
 
 RUN apt-get update && apt-get install -qy --no-install-recommends $BUILD_DEPS && \
+    curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg && \
+    echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_$NODE_MAJOR.x nodistro main" | tee /etc/apt/sources.list.d/nodesource.list && \
     curl -sSf https://sh.rustup.rs | bash -s -- -y --default-toolchain stable && \
     export PATH="$HOME/.cargo/bin:$PATH" && \
     echo "Building WebAuthn Sample from source" && \
+    npm install -g pnpm && \
+    pnpm install && \
+    pnpm run build && \
     cargo build --release --no-default-features && \
-    mkdir -p /opt/webauthn/sbin && \
     strip --strip-all /tmp/target/release/webauthn_sample
 
 ########################################
