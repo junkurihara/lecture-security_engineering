@@ -39,7 +39,7 @@
     "webpack-cli": "5.1.4"
   },
   "dependencies": {
-    "@peculiar/x509": "1.9.5",
+    "@peculiar/x509": "1.9.6",
     "buffer": "^6.0.3",
     "cbor-x": "^1.5.4",
     "js-crypto-utils": "1.0.7",
