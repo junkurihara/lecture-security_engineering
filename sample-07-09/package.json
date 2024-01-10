@@ -17,14 +17,14 @@
   "author": "Jun Kurihara",
   "license": "MIT",
   "devDependencies": {
-    "@types/jest": "29.5.10",
-    "@types/node": "20.10.0",
+    "@types/jest": "29.5.11",
+    "@types/node": "20.10.8",
     "@types/webappsec-credential-management": "0.6.8",
-    "@typescript-eslint/eslint-plugin": "6.12.0",
-    "@typescript-eslint/parser": "6.12.0",
+    "@typescript-eslint/eslint-plugin": "6.18.1",
+    "@typescript-eslint/parser": "6.18.1",
     "can-npm-publish": "1.3.6",
     "cross-env": "7.0.3",
-    "eslint": "8.54.0",
+    "eslint": "8.56.0",
     "jasmine-core": "5.1.1",
     "jest": "29.7.0",
     "karma": "6.4.2",
@@ -39,9 +39,9 @@
     "webpack-cli": "5.1.4"
   },
   "dependencies": {
-    "@peculiar/x509": "1.9.5",
+    "@peculiar/x509": "1.9.6",
     "buffer": "^6.0.3",
-    "cbor-x": "^1.5.4",
+    "cbor-x": "^1.5.7",
     "js-crypto-utils": "1.0.7",
     "js-encoding-utils": "0.7.3"
   }
