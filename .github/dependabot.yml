@@ -44,17 +44,6 @@ updates:
       dev-dependency:
         dependency-type: 'development'
 
-  - package-ecosystem: "npm"
-    directory: "/sample-07-09"
-    schedule:
-      interval: "weekly"
-    groups:
-      prod-dependency:
-        dependency-type: 'production'
-      dev-dependency:
-        dependency-type: 'development'
-
-
   - package-ecosystem: "cargo"
     directory: "/sample-03-rs"
     schedule:
