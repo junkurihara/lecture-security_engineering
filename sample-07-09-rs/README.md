@@ -1,6 +1,6 @@
 # A sample server/client of FIDO2 WebAuthn/Passkeys
 
-**NOTE: This example doesn't capable with untrusted CA-certified passkeys**. We recommend to use Yubico Security Key or YubiKey to play with this example.
+**NOTE: This example is not capable with untrusted CA-certified passkeys**. We think only Yubico keys are available with this example.
 
 ## How to run
 
