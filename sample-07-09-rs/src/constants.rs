@@ -9,3 +9,5 @@ pub const COOKIE_NAME: &str = "webauthn_sample";
 
 pub const COOKIE_REGISTRATION_STATE: &str = "reg_state";
 pub const COOKIE_AUTHENTICATION_STATE: &str = "auth_state";
+
+pub const DEFAULT_TIMEOUT_SEC: u64 = 30;

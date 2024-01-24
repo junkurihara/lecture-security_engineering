@@ -5,9 +5,8 @@ mod startup;
 mod webauthn;
 
 use crate::{error::*, log::*, startup::*, webauthn::*};
-use axum::{
-  error_handling::HandleErrorLayer, extract::Extension, http::StatusCode, routing::post, BoxError, Router, Server,
-};
+use axum::{error_handling::HandleErrorLayer, extract::Extension, http::StatusCode, routing::post, BoxError, Router};
+use constants::DEFAULT_TIMEOUT_SEC;
 use std::sync::Arc;
 use tokio::runtime::Builder;
 use tower::ServiceBuilder;
@@ -44,17 +43,18 @@ async fn define_route(shared_state: Arc<AppState>) {
 
   // session
   let session_store = MemoryStore::default();
+  let error_layer = HandleErrorLayer::new(|_: BoxError| async { StatusCode::BAD_REQUEST });
+  let session_manager_layer = SessionManagerLayer::new(session_store)
+    .with_secure(cookie_secure_flag) // This should be true in production (https environment)
+    .with_name(&cookie_name)
+    .with_same_site(SameSite::Lax);
   let session_service = ServiceBuilder::new()
-    .layer(HandleErrorLayer::new(|_: BoxError| async { StatusCode::BAD_REQUEST }))
-    .layer(
-      SessionManagerLayer::new(session_store)
-        .with_secure(cookie_secure_flag) // This should be true in production (https environment)
-        .with_name(&cookie_name)
-        .with_same_site(SameSite::Lax),
-    );
+    .layer(error_layer)
+    .layer(session_manager_layer)
+    .timeout(std::time::Duration::from_secs(DEFAULT_TIMEOUT_SEC));
 
   // routes
-  let api = Router::new()
+  let api = Router::<_>::new()
     .route("/register_start/:username", post(start_register))
     .route("/register_finish", post(finish_register))
     .route("/login_start/:username", post(start_auth))
@@ -66,7 +66,8 @@ async fn define_route(shared_state: Arc<AppState>) {
   let router = Router::new().merge(api).merge(static_files).layer(session_service);
 
   // build server
-  let server = Server::bind(&addr).serve(router.into_make_service());
+  let listener = tokio::net::TcpListener::bind(&addr).await.unwrap();
+  let server = axum::serve(listener, router.into_make_service());
 
   if let Err(e) = server.await {
     error!("Server is down!: {e}");
