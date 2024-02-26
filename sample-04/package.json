@@ -29,7 +29,7 @@
   },
   "dependencies": {
     "@babel/runtime": "~7.23.2",
-    "commander": "~11.1.0",
+    "commander": "~12.0.0",
     "cross-fetch": "~4.0.0",
     "js-crypto-utils": "1.0.7",
     "js-encoding-utils": "0.7.3",
