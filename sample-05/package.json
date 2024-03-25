@@ -27,8 +27,8 @@
     "webpack-cli": "5.1.4"
   },
   "dependencies": {
-    "@babel/runtime": "~7.23.2",
-    "commander": "~11.1.0",
+    "@babel/runtime": "~7.24.1",
+    "commander": "~12.0.0",
     "js-crypto-ec": "1.0.7",
     "js-crypto-utils": "1.0.7",
     "js-encoding-utils": "0.7.3",
