@@ -28,4 +28,4 @@ ecdsa = { version = "0.16.9", features = ["signing", "verifying", "pkcs8"] }
 
 [dev-dependencies]
 hex-literal = "0.4.1"
-base64 = "0.21.7"
+base64 = "0.22.0"
