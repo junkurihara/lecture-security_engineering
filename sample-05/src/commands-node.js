@@ -1,12 +1,13 @@
 #!/usr/bin/env node
 
 import { ecdh, ecKeyGen, rsaKeyGen, rsaOaepDecrypt, rsaOaepEncrypt } from "./test-apis";
-import pgm from "commander";
+import { Command } from "commander";
 import jseu from "js-encoding-utils";
 import msgpack from "msgpack-lite";
 import { deriveKeyFromMasterSecret } from "./derive-key";
 import { decryptAES, encryptAES } from "./encryptAES";
 
+const pgm = new Command();
 pgm.version("0.0.1");
 
 pgm
