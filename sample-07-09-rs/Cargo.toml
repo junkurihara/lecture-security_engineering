@@ -20,12 +20,12 @@ serde = { version = "1.0.203", features = ["derive"] }
 tokio = { version = "1.38.0", features = ["full"] }
 tower = { version = "0.4.13", features = ["util", "timeout"] }
 tower-http = { version = "0.5.2", features = ["trace", "fs"] }
-tower-sessions = "0.7.0"
+tower-sessions = "0.12.2"
 tracing = "0.1.40"
 tracing-subscriber = { version = "0.3.18", features = ["env-filter"] }
 url = "2.5.2"
 uuid = { version = "1.9.0", features = ["v4"] }
-webauthn-rs = { version = "0.4.8", features = [
+webauthn-rs = { version = "0.5.0", features = [
   "resident-key-support",
   "danger-allow-state-serialisation",
   "preview-features",
