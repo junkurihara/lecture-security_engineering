@@ -14,7 +14,11 @@ use std::sync::Arc;
 use tower_sessions::Session;
 use uuid::Uuid;
 use webauthn_rs::prelude::{
-  AttestationCaList, CredentialID, PasswordlessKeyAuthentication, PasswordlessKeyRegistration, PublicKeyCredential,
+  //AttestationCaList,
+  CredentialID,
+  PasskeyAuthentication,
+  PasskeyRegistration,
+  PublicKeyCredential,
   RegisterPublicKeyCredential,
 };
 
@@ -41,14 +45,14 @@ impl IntoResponse for WebAuthnError {
 struct RegistrationState {
   username: String,
   uuid: Uuid,
-  passkey_registration: PasswordlessKeyRegistration,
+  passkey_registration: PasskeyRegistration,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 struct AuthenticationState {
   username: String,
   uuid: Uuid,
-  passkey_authentication: PasswordlessKeyAuthentication,
+  passkey_authentication: PasskeyAuthentication,
 }
 
 pub async fn start_register(
@@ -70,36 +74,27 @@ pub async fn start_register(
   });
   drop(users);
 
-  let _ = session
-    .remove::<RegistrationState>(COOKIE_REGISTRATION_STATE)
-    .map_err(|e| {
-      error!(
-        "Failed to remove registration state from session during new registration initiation: {}",
-        e
-      );
-      WebAuthnError::UnknownError
-    })?;
+  let _ = session.remove::<RegistrationState>(COOKIE_REGISTRATION_STATE).map_err(|e| {
+    error!(
+      "Failed to remove registration state from session during new registration initiation: {}",
+      e
+    );
+    WebAuthnError::UnknownError
+  })?;
 
   let users = shared_state.users.lock().map_err(|e| {
     error!("Failed to lock users: {}", e);
     WebAuthnError::UnknownError
   })?;
-  let existing_cred_ids = users.id_passkey_map.get(&uuid).map(|keys| {
-    keys
-      .iter()
-      .map(|sk| sk.cred_id().clone())
-      .collect::<Vec<CredentialID>>()
-  });
+  let existing_cred_ids = users
+    .id_passkey_map
+    .get(&uuid)
+    .map(|keys| keys.iter().map(|sk| sk.cred_id().clone()).collect::<Vec<CredentialID>>());
   drop(users);
 
-  let res = shared_state.webauthn.start_passwordlesskey_registration(
-    uuid,
-    &username,
-    &username,
-    existing_cred_ids,
-    AttestationCaList::strict(),
-    None,
-  );
+  let res = shared_state
+    .webauthn
+    .start_passkey_registration(uuid, &username, &username, existing_cred_ids);
   // .start_passkey_registration(uuid, &username, &username, existing_cred_ids);
 
   match res {
@@ -147,19 +142,17 @@ pub async fn finish_register(
     })?
     .ok_or(WebAuthnError::CorruptSession)?;
 
-  let _ = session
-    .remove::<RegistrationState>(COOKIE_REGISTRATION_STATE)
-    .map_err(|e| {
-      error!(
-        "Failed to remove registration state from session during registration finish: {}",
-        e
-      );
-      WebAuthnError::UnknownError
-    })?;
+  let _ = session.remove::<RegistrationState>(COOKIE_REGISTRATION_STATE).map_err(|e| {
+    error!(
+      "Failed to remove registration state from session during registration finish: {}",
+      e
+    );
+    WebAuthnError::UnknownError
+  })?;
 
   let res = app_state
     .webauthn
-    .finish_passwordlesskey_registration(&reg, &reg_state.passkey_registration);
+    .finish_passkey_registration(&reg, &reg_state.passkey_registration);
 
   let status_code = match res {
     Ok(new_passkey) => {
@@ -208,9 +201,7 @@ pub async fn start_auth(
     .ok_or(WebAuthnError::UnknownUserLoginAttempt)?;
   let creds = users.id_passkey_map.get(&uuid).ok_or(WebAuthnError::NoCredential)?;
 
-  let res = shared_state
-    .webauthn
-    .start_passwordlesskey_authentication(creds.as_slice());
+  let res = shared_state.webauthn.start_passkey_authentication(creds.as_slice());
 
   drop(users);
 
@@ -268,7 +259,7 @@ pub async fn finish_auth(
 
   let res = shared_state
     .webauthn
-    .finish_passwordlesskey_authentication(&auth, &auth_state.passkey_authentication);
+    .finish_passkey_authentication(&auth, &auth_state.passkey_authentication);
 
   let status_code = match res {
     Ok(auth_res) => {
