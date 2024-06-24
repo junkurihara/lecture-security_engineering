@@ -10,6 +10,8 @@ target/
 .vscode
 .env
 log/
+node_modules/
+dist/
 
 ## Core latex/pdflatex auxiliary files:
 *.aux
