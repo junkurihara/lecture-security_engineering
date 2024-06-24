@@ -9,6 +9,7 @@ use axum::{
   response::{IntoResponse, Response},
   Extension, Json,
 };
+use axum_macros::debug_handler;
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
 use tower_sessions::Session;
@@ -55,42 +56,49 @@ struct AuthenticationState {
   passkey_authentication: PasskeyAuthentication,
 }
 
+#[debug_handler]
 pub async fn start_register(
   Extension(shared_state): Extension<Arc<AppState>>,
   session: Session,
   Path(username): Path<String>,
 ) -> Result<impl IntoResponse, WebAuthnError> {
   info!("Start register a credential for {}", username);
+  let uuid = {
+    let mut users = shared_state.users.lock().map_err(|e| {
+      error!("Failed to lock users: {}", e);
+      WebAuthnError::UnknownError
+    })?;
 
-  let mut users = shared_state.users.lock().map_err(|e| {
-    error!("Failed to lock users: {}", e);
-    WebAuthnError::UnknownError
-  })?;
+    let uuid = *users.username_id_map.entry(username.to_owned()).or_insert_with(|| {
+      let u = Uuid::new_v4();
+      info!("New user registration: {} - {}", username, &u);
+      u
+    });
+    uuid
+  };
 
-  let uuid = *users.username_id_map.entry(username.to_owned()).or_insert_with(|| {
-    let u = Uuid::new_v4();
-    info!("New user registration: {} - {}", username, &u);
-    u
-  });
-  drop(users);
+  let _ = session
+    .remove::<RegistrationState>(COOKIE_REGISTRATION_STATE)
+    .await
+    .map_err(|e| {
+      error!(
+        "Failed to remove registration state from session during new registration initiation: {}",
+        e
+      );
+      WebAuthnError::UnknownError
+    })?;
 
-  let _ = session.remove::<RegistrationState>(COOKIE_REGISTRATION_STATE).map_err(|e| {
-    error!(
-      "Failed to remove registration state from session during new registration initiation: {}",
-      e
-    );
-    WebAuthnError::UnknownError
-  })?;
-
-  let users = shared_state.users.lock().map_err(|e| {
-    error!("Failed to lock users: {}", e);
-    WebAuthnError::UnknownError
-  })?;
-  let existing_cred_ids = users
-    .id_passkey_map
-    .get(&uuid)
-    .map(|keys| keys.iter().map(|sk| sk.cred_id().clone()).collect::<Vec<CredentialID>>());
-  drop(users);
+  let existing_cred_ids = {
+    let users = shared_state.users.lock().map_err(|e| {
+      error!("Failed to lock users: {}", e);
+      WebAuthnError::UnknownError
+    })?;
+    let existing_cred_ids = users
+      .id_passkey_map
+      .get(&uuid)
+      .map(|keys| keys.iter().map(|sk| sk.cred_id().clone()).collect::<Vec<CredentialID>>());
+    existing_cred_ids
+  };
 
   let res = shared_state
     .webauthn
@@ -103,14 +111,17 @@ pub async fn start_register(
       // Note that due to the session store in use being a server side memory store, this is
       // safe to store the reg_state into the session since it is not client controlled and
       // not open to replay attacks. If this was a cookie store, this would be UNSAFE.
-      if let Err(e) = session.insert(
-        COOKIE_REGISTRATION_STATE,
-        RegistrationState {
-          username,
-          uuid,
-          passkey_registration,
-        },
-      ) {
+      if let Err(e) = session
+        .insert(
+          COOKIE_REGISTRATION_STATE,
+          RegistrationState {
+            username,
+            uuid,
+            passkey_registration,
+          },
+        )
+        .await
+      {
         error!(
           "Failed to insert registration state into session during new registration initiation: {}",
           e
@@ -126,6 +137,7 @@ pub async fn start_register(
   }
 }
 
+#[debug_handler]
 pub async fn finish_register(
   Extension(app_state): Extension<Arc<AppState>>,
   session: Session,
@@ -133,6 +145,7 @@ pub async fn finish_register(
 ) -> Result<impl IntoResponse, WebAuthnError> {
   let reg_state = session
     .get::<RegistrationState>(COOKIE_REGISTRATION_STATE)
+    .await
     .map_err(|e| {
       error!(
         "Failed to get registration state from session during registration finish: {}",
@@ -142,13 +155,16 @@ pub async fn finish_register(
     })?
     .ok_or(WebAuthnError::CorruptSession)?;
 
-  let _ = session.remove::<RegistrationState>(COOKIE_REGISTRATION_STATE).map_err(|e| {
-    error!(
-      "Failed to remove registration state from session during registration finish: {}",
-      e
-    );
-    WebAuthnError::UnknownError
-  })?;
+  let _ = session
+    .remove::<RegistrationState>(COOKIE_REGISTRATION_STATE)
+    .await
+    .map_err(|e| {
+      error!(
+        "Failed to remove registration state from session during registration finish: {}",
+        e
+      );
+      WebAuthnError::UnknownError
+    })?;
 
   let res = app_state
     .webauthn
@@ -173,6 +189,7 @@ pub async fn finish_register(
   Ok(status_code)
 }
 
+#[debug_handler]
 pub async fn start_auth(
   Extension(shared_state): Extension<Arc<AppState>>,
   session: Session,
@@ -182,6 +199,7 @@ pub async fn start_auth(
 
   let _ = session
     .remove::<AuthenticationState>(COOKIE_AUTHENTICATION_STATE)
+    .await
     .map_err(|e| {
       error!(
         "Failed to remove authentication state from session during new authentication initiation: {}",
@@ -190,32 +208,35 @@ pub async fn start_auth(
       WebAuthnError::UnknownError
     })?;
 
-  let users = shared_state.users.lock().map_err(|e| {
-    error!("Failed to lock users: {}", e);
-    WebAuthnError::UnknownError
-  })?;
+  let (res, uuid) = {
+    let users = shared_state.users.lock().map_err(|e| {
+      error!("Failed to lock users: {}", e);
+      WebAuthnError::UnknownError
+    })?;
+    let uuid = *users
+      .username_id_map
+      .get(&username)
+      .ok_or(WebAuthnError::UnknownUserLoginAttempt)?;
+    let creds = users.id_passkey_map.get(&uuid).ok_or(WebAuthnError::NoCredential)?;
+    let res = shared_state.webauthn.start_passkey_authentication(creds.as_slice());
 
-  let uuid = *users
-    .username_id_map
-    .get(&username)
-    .ok_or(WebAuthnError::UnknownUserLoginAttempt)?;
-  let creds = users.id_passkey_map.get(&uuid).ok_or(WebAuthnError::NoCredential)?;
-
-  let res = shared_state.webauthn.start_passkey_authentication(creds.as_slice());
-
-  drop(users);
+    (res, uuid)
+  };
 
   match res {
     Ok((rcr, passkey_authentication)) => {
       info!("Authentication initiated for {}", username);
-      if let Err(e) = session.insert(
-        COOKIE_AUTHENTICATION_STATE,
-        AuthenticationState {
-          username,
-          uuid,
-          passkey_authentication,
-        },
-      ) {
+      if let Err(e) = session
+        .insert(
+          COOKIE_AUTHENTICATION_STATE,
+          AuthenticationState {
+            username,
+            uuid,
+            passkey_authentication,
+          },
+        )
+        .await
+      {
         error!(
           "Failed to insert authentication state into session during new authentication initiation: {}",
           e
@@ -231,6 +252,7 @@ pub async fn start_auth(
   }
 }
 
+#[debug_handler]
 pub async fn finish_auth(
   Extension(shared_state): Extension<Arc<AppState>>,
   session: Session,
@@ -238,6 +260,7 @@ pub async fn finish_auth(
 ) -> Result<impl IntoResponse, WebAuthnError> {
   let auth_state = session
     .get::<AuthenticationState>(COOKIE_AUTHENTICATION_STATE)
+    .await
     .map_err(|e| {
       error!(
         "Failed to get authentication state from session during authentication finish: {}",
@@ -249,6 +272,7 @@ pub async fn finish_auth(
 
   let _ = session
     .remove::<AuthenticationState>(COOKIE_AUTHENTICATION_STATE)
+    .await
     .map_err(|e| {
       error!(
         "Failed to remove authentication state from session during authentication finish: {}",

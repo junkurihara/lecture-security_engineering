@@ -46,7 +46,7 @@ async fn define_route(shared_state: Arc<AppState>) {
   let error_layer = HandleErrorLayer::new(|_: BoxError| async { StatusCode::BAD_REQUEST });
   let session_manager_layer = SessionManagerLayer::new(session_store)
     .with_secure(cookie_secure_flag) // This should be true in production (https environment)
-    .with_name(&cookie_name)
+    .with_name(cookie_name)
     .with_same_site(SameSite::Lax);
   let session_service = ServiceBuilder::new()
     .layer(error_layer)
