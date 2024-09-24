@@ -11,17 +11,17 @@ publish = false
 
 [dependencies]
 aes = "0.8.4"
-anyhow = "1.0.86"
+anyhow = "1.0.89"
 base64 = "0.22.1"
 cbc = { version = "0.1.2", features = ["alloc"] }
-clap = { version = "4.5.16", features = ["std", "cargo", "wrap_help", "derive"] }
+clap = { version = "4.5.18", features = ["std", "cargo", "wrap_help", "derive"] }
 hkdf = "0.12.4"
 pbkdf2 = "0.12.2"
 rand = "0.8.5"
 reqwest = { version = "0.12.7", features = ["json"] }
-serde = { version = "1.0.208", features = ["derive"] }
+serde = { version = "1.0.210", features = ["derive"] }
 sha2 = "0.10.8"
-tokio = { version = "1.39.3", default-features = false, features = [
+tokio = { version = "1.40.0", default-features = false, features = [
   "net",
   "rt-multi-thread",
   "time",
