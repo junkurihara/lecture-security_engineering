@@ -11,7 +11,7 @@ publish = false
 
 [dependencies]
 aes = "0.8.4"
-anyhow = "1.0.89"
+anyhow = "1.0.90"
 base64 = "0.22.1"
 cbc = { version = "0.1.2", features = ["alloc"] }
 clap = { version = "4.5.20", features = [

@@ -12,7 +12,7 @@ publish = false
 
 [dependencies]
 axum = { version = "0.7.7" }
-anyhow = "1.0.89"
+anyhow = "1.0.90"
 clap = { version = "4.5.20", features = [
   "std",
   "cargo",
@@ -29,7 +29,7 @@ tower-sessions = "0.13.0"
 tracing = "0.1.40"
 tracing-subscriber = { version = "0.3.18", features = ["env-filter"] }
 url = "2.5.2"
-uuid = { version = "1.10.0", features = ["v4"] }
+uuid = { version = "1.11.0", features = ["v4"] }
 webauthn-rs = { version = "0.5.0", features = [
   "resident-key-support",
   "danger-allow-state-serialisation",
