@@ -12,7 +12,7 @@ publish = false
 
 [dependencies]
 axum = { version = "0.7.7" }
-anyhow = "1.0.90"
+anyhow = "1.0.91"
 clap = { version = "4.5.20", features = [
   "std",
   "cargo",
@@ -21,8 +21,8 @@ clap = { version = "4.5.20", features = [
 ] }
 rand = "0.8.5"
 rustc-hash = "2.0.0"
-serde = { version = "1.0.210", features = ["derive"] }
-tokio = { version = "1.40.0", features = ["full"] }
+serde = { version = "1.0.213", features = ["derive"] }
+tokio = { version = "1.41.0", features = ["full"] }
 tower = { version = "0.5.1", features = ["util", "timeout"] }
 tower-http = { version = "0.6.1", features = ["trace", "fs"] }
 tower-sessions = "0.13.0"
