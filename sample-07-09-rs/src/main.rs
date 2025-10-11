@@ -55,12 +55,12 @@ async fn define_route(shared_state: Arc<AppState>) {
 
   // routes
   let api = Router::<_>::new()
-    .route("/register_start/:username", post(start_register))
+    .route("/register_start/{username}", post(start_register))
     .route("/register_finish", post(finish_register))
-    .route("/login_start/:username", post(start_auth))
+    .route("/login_start/{username}", post(start_auth))
     .route("/login_finish", post(finish_auth))
     .layer(Extension(shared_state));
-  let static_files = Router::new().nest_service("/", ServeDir::new(asset_dir).append_index_html_on_directories(true));
+  let static_files = Router::new().fallback_service(ServeDir::new(asset_dir).append_index_html_on_directories(true));
 
   // build router with session
   let router = Router::new().merge(api).merge(static_files).layer(session_service);

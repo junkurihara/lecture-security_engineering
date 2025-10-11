@@ -1,20 +1,20 @@
-FROM ubuntu:22.04 AS base
+FROM ubuntu:24.04 AS base
 
 SHELL ["/bin/sh", "-x", "-c"]
-ENV SERIAL 2
+ENV SERIAL=2
 
 ########################################
-FROM base as builder
+FROM base AS builder
 
 ENV CFLAGS=-Ofast
-ENV BUILD_DEPS curl make ca-certificates build-essential pkg-config libssl-dev
-ENV NODE_MAJOR 20
+ENV BUILD_DEPS="curl make ca-certificates build-essential pkg-config libssl-dev"
+ENV NODE_MAJOR=20
 
 WORKDIR /tmp
 
 COPY . /tmp/
 
-ENV RUSTFLAGS "-C link-arg=-s"
+ENV RUSTFLAGS="-C link-arg=-s"
 
 RUN update-ca-certificates 2> /dev/null || true
 
@@ -29,7 +29,7 @@ RUN apt-get update && apt-get install -qy --no-install-recommends $BUILD_DEPS &&
 FROM base AS runner
 LABEL maintainer="Jun Kurihara"
 
-ENV RUNTIME_DEPS logrotate ca-certificates gosu
+ENV RUNTIME_DEPS="logrotate ca-certificates gosu"
 
 RUN apt-get update && \
     apt-get install -qy --no-install-recommends $RUNTIME_DEPS && \
