@@ -11,7 +11,7 @@ publish = false
 
 [dependencies]
 anyhow = "1.0.100"
-clap = { version = "4.5.48", features = [
+clap = { version = "4.5.51", features = [
   "std",
   "cargo",
   "wrap_help",
@@ -32,5 +32,5 @@ typenum = "1.19.0"
 ecdsa = { version = "0.16.9", features = ["signing", "verifying", "pkcs8"] }
 
 [dev-dependencies]
-hex-literal = "1.0.0"
+hex-literal = "1.1.0"
 base64 = "0.22.1"
