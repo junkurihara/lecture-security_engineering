@@ -13,10 +13,10 @@ publish = false
 aes = "0.8.4"
 anyhow = "1.0.100"
 cbc = { version = "0.1.2", features = ["alloc"] }
-clap = { version = "4.5.51", features = ["std", "cargo", "wrap_help", "derive"] }
+clap = { version = "4.5.53", features = ["std", "cargo", "wrap_help", "derive"] }
 hkdf = "0.12.4"
 rand = "0.9.2"
-rsa = { version = "0.9.8" }
+rsa = { version = "0.9.9" }
 serde = { version = "1.0.228", features = ["derive"] }
 sha2 = "0.10.9"
 hex = "0.4.3"

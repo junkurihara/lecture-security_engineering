@@ -11,9 +11,9 @@ publish = false
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-axum = { version = "0.8.6" }
+axum = { version = "0.8.7" }
 anyhow = "1.0.100"
-clap = { version = "4.5.51", features = [
+clap = { version = "4.5.53", features = [
   "std",
   "cargo",
   "wrap_help",
@@ -24,13 +24,13 @@ rustc-hash = "2.1.1"
 serde = { version = "1.0.228", features = ["derive"] }
 tokio = { version = "1.48.0", features = ["full"] }
 tower = { version = "0.5.2", features = ["util", "timeout"] }
-tower-http = { version = "0.6.6", features = ["trace", "fs"] }
+tower-http = { version = "0.6.8", features = ["trace", "fs"] }
 tower-sessions = "0.14.0"
-tracing = "0.1.41"
-tracing-subscriber = { version = "0.3.20", features = ["env-filter"] }
+tracing = "0.1.43"
+tracing-subscriber = { version = "0.3.22", features = ["env-filter"] }
 url = "2.5.7"
-uuid = { version = "1.18.1", features = ["v4"] }
-webauthn-rs = { version = "0.5.3", features = [
+uuid = { version = "1.19.0", features = ["v4"] }
+webauthn-rs = { version = "0.5.4", features = [
   "resident-key-support",
   "danger-allow-state-serialisation",
   "preview-features",
