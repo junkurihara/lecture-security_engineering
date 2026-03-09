@@ -1,6 +1,6 @@
 # Security Engineering
 
-Lecture slides and some program sources of a lecture ``Security Engineering'' at University of Hyogo
+Lecture slides and some program sources of a lecture ``Security Engineering'' at University of Hyogo from 2020--2025 Fall program.
 
 ## Licence
 
